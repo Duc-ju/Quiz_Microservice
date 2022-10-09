@@ -27,6 +27,10 @@ public class Lesson {
     @Transient
     private Long numberOfLiked;
 
+    @Transient
+    @Getter(AccessLevel.NONE)
+    private Integer numberOfQuestion;
+
     private Date createdAt;
     private Date updatedAt;
     private boolean disFlg;
@@ -34,16 +38,25 @@ public class Lesson {
     @Column(columnDefinition = "boolean default false")
     private boolean deleted;
 
-    @OneToMany
+    @OneToMany(mappedBy = "lesson")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<Question> questions;
 
     @ManyToOne
+    @JoinColumn(name = "category_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Category category;
 
     @ManyToMany
+    @JoinColumn(name = "tag_id")
     private Collection<Tag> tags;
+
+    private String image;
+
+    public Integer getNumberOfQuestion() {
+        if (questions != null) return questions.size();
+        return 0;
+    }
 }

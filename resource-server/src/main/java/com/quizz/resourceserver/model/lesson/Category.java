@@ -17,9 +17,9 @@ public class Category {
     private Long id;
     private String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "category")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<Question> questions;
-//    private String image;
+    private String image;
 }

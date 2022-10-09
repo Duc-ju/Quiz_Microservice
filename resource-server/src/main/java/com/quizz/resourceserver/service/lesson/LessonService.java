@@ -1,12 +1,14 @@
 package com.quizz.resourceserver.service.lesson;
 
 import com.quizz.resourceserver.common.LogType;
+import com.quizz.resourceserver.common.ResponseObject;
 import com.quizz.resourceserver.model.lesson.Lesson;
 import com.quizz.resourceserver.repository.lesson.LessonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Calendar;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class LessonService {
 
     private final LessonRepository lessonRepository;
+    private final WebClient webClient;
 
     /**
      * This method to save lesson
@@ -75,6 +78,20 @@ public class LessonService {
         if (!lessonOptional.isPresent()) {
             throw new Exception("Cannot found lesson with id " + id);
         }
+        Lesson lesson = lessonOptional.get();
+        ResponseObject likeCount = webClient.get()
+                .uri("http://localhost:8083/api/v1/lesson-likes/count",
+                        uriBuilder -> uriBuilder.queryParam("lessonId", id).build())
+                .retrieve().bodyToMono(ResponseObject.class)
+                .block();
+
+        ResponseObject playCount = webClient.get()
+                .uri("http://localhost:8083/api/v1/answer-times/count",
+                        uriBuilder -> uriBuilder.queryParam("lessonId", id).build())
+                .retrieve().bodyToMono(ResponseObject.class)
+                .block();
+        lesson.setNumberOfLiked(Long.valueOf(likeCount.getData().toString()));
+        lesson.setNumberOfPlayed(Long.valueOf(playCount.getData().toString()));
         return lessonOptional.get();
     }
 
