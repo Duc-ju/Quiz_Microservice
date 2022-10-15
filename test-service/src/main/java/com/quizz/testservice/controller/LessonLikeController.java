@@ -1,7 +1,6 @@
 package com.quizz.testservice.controller;
 
 import com.quizz.testservice.common.ResponseObject;
-import com.quizz.testservice.dto.LessonRequest;
 import com.quizz.testservice.model.LessonLike;
 import com.quizz.testservice.service.LessonLikeService;
 import lombok.RequiredArgsConstructor;
@@ -10,17 +9,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/lesson-likes")
+@RequestMapping("/api/v1/test/lesson-likes")
 @RequiredArgsConstructor
 public class LessonLikeController {
 
     private final LessonLikeService lessonLikeService;
 
     @GetMapping("/count")
-    public ResponseEntity<ResponseObject> getCountLessonLike(@RequestParam LessonRequest lesson) {
+    public ResponseEntity<ResponseObject> getCountLessonLike(@RequestParam Long lessonId) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("Return number likes count of lesson",
-                        lessonLikeService.countLessonLike(lesson.getLessonId()))
+                        lessonLikeService.countLessonLike(lessonId))
         );
     }
 

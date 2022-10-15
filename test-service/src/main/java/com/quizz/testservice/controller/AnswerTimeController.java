@@ -1,7 +1,6 @@
 package com.quizz.testservice.controller;
 
 import com.quizz.testservice.common.ResponseObject;
-import com.quizz.testservice.dto.LessonRequest;
 import com.quizz.testservice.model.AnswerTime;
 import com.quizz.testservice.service.AnswerTimeService;
 import lombok.RequiredArgsConstructor;
@@ -11,16 +10,16 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/answer-times")
+@RequestMapping("/api/v1/test/answer-times")
 public class AnswerTimeController {
 
     private final AnswerTimeService answerTimeService;
 
     @GetMapping(path = "/count")
-    public ResponseEntity<ResponseObject> getAnswerTime(@RequestBody LessonRequest lesson) {
+    public ResponseEntity<ResponseObject> getAnswerTime(@RequestParam Long lessonId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseObject("return count of answer time", answerTimeService
-                        .getAnswerTime(lesson.getLessonId())));
+                        .getAnswerTime(lessonId)));
     }
 
     @PostMapping(path = "")

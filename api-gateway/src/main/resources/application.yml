@@ -1,0 +1,48 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      #resource-service-route
+      routes[0]:
+        id: resource-service
+        uri: lb://resource-service
+        predicates[0]: Path=/api/v1/resource/**
+      routes[1]:
+        id: test-service
+        uri: lb://test-service
+        predicates[0]: Path=/api/v1/test/**
+      routes[2]:
+        uri: http://localhost:8761
+        filters[0]: SetPath=/
+        id: discovery-server
+        predicates[0]: Path=/eureka/web
+      routes[3]:
+        id: discovery-server-static
+        predicates[0]: Path=/eureka/**
+        uri: http://localhost:8761
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8181/realms/spring-boot-microservices-realm
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway:
+            route:
+              RouteDefinitionRouteLocator: INFO
+            nodeValue: TRACE
+    root: INFO
