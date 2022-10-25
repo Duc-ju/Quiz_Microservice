@@ -20,4 +20,8 @@ public class AnswerTimeService {
     public AnswerTime addAnswerTime(AnswerTime answerTime) {
         return answerTimeRepository.save(answerTime);
     }
+
+    public void deleteAnswerTimeBySocketId(String socketId) {
+        answerTimeRepository.deleteAnswerTimeBySocketId(socketId);
+    }
 }

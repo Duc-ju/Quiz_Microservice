@@ -15,16 +15,15 @@ public class QuestionAnswer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long userId;
     private Long questionId;
 
-    @OneToMany(mappedBy="questionAnswer")
+    @OneToMany(mappedBy = "questionAnswer")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<QuestionAnswerPart> questionAnswerParts;
 
     @Transient
-    private boolean right;
+    private boolean rightAnswer;
 
     private int duration;
 

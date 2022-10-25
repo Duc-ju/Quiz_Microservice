@@ -10,6 +10,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class AnswerTime {
 
     @Id
@@ -31,8 +32,17 @@ public class AnswerTime {
     @Transient
     private Long point;
 
+    private String socketId;
+    private String nickName;
+
     @OneToMany(mappedBy = "answerTime")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Collection<QuestionAnswer> questionAnswers;
+
+    @ManyToOne
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JoinColumn(name = "room_id")
+    private Room room;
 }

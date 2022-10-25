@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: socket-service
+
+server:
+  port: 8085
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+logging:
+  level:
+    org:
+      type:
+        description:
+          sql: trace
