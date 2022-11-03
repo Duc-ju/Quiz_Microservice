@@ -1,5 +1,6 @@
 package com.quizz.resourceservice.model.question;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,8 +14,12 @@ public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(length = 2048)
     private String title;
     private boolean answerKey;
+
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int disOrder;
     private boolean disFlg;
 
@@ -22,5 +27,6 @@ public class Answer {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JoinColumn(name = "question_id")
+    @JsonBackReference
     private Question question;
 }

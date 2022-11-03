@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,5 +32,17 @@ public class CategoryController {
     public ResponseEntity<ResponseObject> getCategories() {
         List<Category> categories = categoryService.getCategoryList();
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("return list", categories));
+    }
+
+    @PostMapping("")
+    public ResponseEntity<ResponseObject> addCategory(@RequestBody Category category) {
+        Category savedCategory = categoryService.addCategory(category);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("return saved category", savedCategory));
+    }
+
+    @PostMapping("/all")
+    public ResponseEntity<ResponseObject> addCategories(@RequestBody List<Category> categories) {
+        List<Category> savedCategories = categoryService.addCategories(categories);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("return saved category list", savedCategories));
     }
 }

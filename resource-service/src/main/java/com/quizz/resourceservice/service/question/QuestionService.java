@@ -47,4 +47,12 @@ public class QuestionService {
         }
         return questionOptional.get();
     }
+
+    public Question getQuestion(Long id) throws Exception {
+        Optional<Question> optionalQuestion = questionRepository.findById(id);
+        if (!optionalQuestion.isPresent()) {
+            throw new Exception("Can not find question with id " + id);
+        }
+        return optionalQuestion.get();
+    }
 }

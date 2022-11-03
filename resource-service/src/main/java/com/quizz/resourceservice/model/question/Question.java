@@ -1,6 +1,7 @@
 package com.quizz.resourceservice.model.question;
 
-import com.quizz.resourceservice.model.lesson.Category;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.quizz.resourceservice.model.lesson.Lesson;
 import lombok.*;
 
@@ -18,7 +19,11 @@ public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(length = 2048)
     private String title;
+
+    @Column(length = 1024)
     private String image;
     private int duration;
     private int point;
@@ -27,9 +32,9 @@ public class Question {
     @OneToMany(mappedBy = "question")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonManagedReference
     private Collection<Answer> answers;
 
-    private boolean disOrder;
     private boolean disFlg;
     private boolean overlooked;
     private Date updatedAt;
@@ -38,11 +43,7 @@ public class Question {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JoinColumn(name = "lesson_id")
+    @JsonBackReference
     private Lesson lesson;
 
-    @ManyToOne
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @JoinColumn(name = "category_id")
-    private Category category;
 }

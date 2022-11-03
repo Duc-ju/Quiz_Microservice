@@ -1,6 +1,6 @@
 package com.quizz.resourceservice.model.lesson;
 
-import com.quizz.resourceservice.model.question.Question;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,11 +15,16 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(length = 2048)
     private String name;
 
     @OneToMany(mappedBy = "category")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Collection<Question> questions;
+    @JsonManagedReference
+    private Collection<Lesson> lessons;
+
+    @Column(length = 1024)
     private String image;
 }

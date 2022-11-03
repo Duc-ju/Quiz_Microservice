@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Data
 @AllArgsConstructor
@@ -16,8 +15,8 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
 
-    @ManyToMany(mappedBy = "tags")
-    private Collection<Lesson> lessons;
+    @Column(length = 2048)
+    private String name;
+    
 }

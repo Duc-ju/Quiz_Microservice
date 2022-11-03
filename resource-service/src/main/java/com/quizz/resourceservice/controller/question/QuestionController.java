@@ -23,6 +23,21 @@ public class QuestionController {
         );
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseObject> getQuestion(@PathVariable Long id) {
+        try {
+            Question question = questionService.getQuestion(id);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Return question with id: " + id, question)
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject(e.getMessage(), null)
+            );
+        }
+
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ResponseObject> updateQuestion(@RequestBody Question newQuestion, @PathVariable Long id) {
         try {
