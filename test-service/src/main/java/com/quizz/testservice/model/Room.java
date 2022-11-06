@@ -1,5 +1,6 @@
 package com.quizz.testservice.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,5 +24,6 @@ public class Room {
     @OneToMany(mappedBy = "room")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonManagedReference
     private Collection<AnswerTime> answerTimes;
 }

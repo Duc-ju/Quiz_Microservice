@@ -3,6 +3,7 @@ package com.quizz.resourceservice.controller.lesson;
 import com.quizz.resourceservice.common.ResponseObject;
 import com.quizz.resourceservice.model.lesson.Lesson;
 import com.quizz.resourceservice.service.lesson.LessonService;
+import com.quizz.resourceservice.service.question.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 public class LessonController {
 
     private final LessonService lessonService;
+    private final QuestionService questionService;
 
     @GetMapping("")
     public ResponseEntity<ResponseObject> getLessons() {
@@ -62,5 +64,12 @@ public class LessonController {
                     new ResponseObject(e.getMessage(), null)
             );
         }
+    }
+
+    @GetMapping("/{id}/questions")
+    public ResponseEntity<ResponseObject> getQuestionsByLesson(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("Return question list", questionService.getQuestionsByLessonId(id))
+        );
     }
 }

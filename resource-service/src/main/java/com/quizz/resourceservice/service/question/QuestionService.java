@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,5 +55,9 @@ public class QuestionService {
             throw new Exception("Can not find question with id " + id);
         }
         return optionalQuestion.get();
+    }
+
+    public List<Question> getQuestionsByLessonId(Long lessonId) {
+        return questionRepository.findByLessonId(lessonId);
     }
 }

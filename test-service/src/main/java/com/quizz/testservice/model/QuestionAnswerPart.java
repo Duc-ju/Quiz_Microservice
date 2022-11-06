@@ -1,5 +1,6 @@
 package com.quizz.testservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,5 +21,6 @@ public class QuestionAnswerPart {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JoinColumn(name = "question_answer_id")
+    @JsonBackReference
     private QuestionAnswer questionAnswer;
 }

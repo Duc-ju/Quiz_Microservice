@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RequestMessage<T> {
     private String type;
-    private T message;
+    private T body;
 }

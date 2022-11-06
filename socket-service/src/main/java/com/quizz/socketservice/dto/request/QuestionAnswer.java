@@ -10,7 +10,8 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuestionAnswer {
+    private Long id;
     private Long questionId;
-    private Long answerTimeId;
-    Collection<QuestionAnswerPart> questionAnswerParts;
+    private Collection<QuestionAnswerPart> questionAnswerParts;
+    private AnswerTime answerTime;
 }

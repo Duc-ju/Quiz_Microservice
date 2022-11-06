@@ -1,5 +1,7 @@
 package com.quizz.testservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,6 +22,7 @@ public class QuestionAnswer {
     @OneToMany(mappedBy = "questionAnswer")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonManagedReference
     private Collection<QuestionAnswerPart> questionAnswerParts;
 
     @Transient
@@ -31,5 +34,6 @@ public class QuestionAnswer {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JoinColumn(name = "answer_time_id")
+    @JsonBackReference
     private AnswerTime answerTime;
 }

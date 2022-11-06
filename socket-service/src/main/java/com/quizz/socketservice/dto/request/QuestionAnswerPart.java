@@ -1,6 +1,14 @@
 package com.quizz.socketservice.dto.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class QuestionAnswerPart {
-    private long answerId;
-    private boolean right;
+    private Long id;
+    private Long answerId;
+    private boolean rightAnswer;
 }

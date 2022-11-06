@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class AnswerTime {
+    private Long id;
     private Long lessonId;
     private Long userId;
     private LocalDateTime playedDateTime;

@@ -13,6 +13,8 @@ import reactor.util.annotation.Nullable;
 public class ResponseMessage {
     private String status;
 
+    private String type;
+
     @Nullable
     private Object message;
 }

@@ -1,15 +1,17 @@
-package com.quizz.socketservice.dto.response;
+package com.quizz.socketservice.dto.question;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.Date;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Question {
+
     private Long id;
     private String title;
     private String image;
@@ -17,4 +19,8 @@ public class Question {
     private int point;
     private int numberOfKeys;
     private Collection<Answer> answers;
+    private boolean disFlg;
+    private boolean overlooked;
+    private Date updatedAt;
+
 }
