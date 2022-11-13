@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomRequest {
+    private Long id;
     private Long lessonId;
     private Long userId;
     private LocalDateTime createdAt;

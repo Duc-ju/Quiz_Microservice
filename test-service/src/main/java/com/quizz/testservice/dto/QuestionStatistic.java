@@ -1,4 +1,4 @@
-package com.quizz.socketservice.dto.response;
+package com.quizz.testservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class QuestionStatistic {
     private boolean right;
-    private int point;
+//    private int point;
 //    private int numberOfAnswers;
 //    private int duration;
 //    private Collection<String> rank;

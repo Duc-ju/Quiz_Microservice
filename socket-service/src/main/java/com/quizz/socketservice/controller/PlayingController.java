@@ -2,18 +2,19 @@ package com.quizz.socketservice.controller;
 
 import com.quizz.socketservice.common.MessageStatus;
 import com.quizz.socketservice.common.ResponseType;
-import com.quizz.socketservice.dto.http.ResponseObject;
 import com.quizz.socketservice.dto.question.Question;
 import com.quizz.socketservice.dto.request.AnswerTime;
 import com.quizz.socketservice.dto.request.QuestionAnswer;
 import com.quizz.socketservice.dto.request.RequestMessage;
 import com.quizz.socketservice.dto.request.RoomRequest;
 import com.quizz.socketservice.dto.response.ResponseMessage;
+import com.quizz.socketservice.dto.response.ResponseObject;
 import com.quizz.socketservice.service.ResourceConnectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -33,11 +34,12 @@ public class PlayingController {
     private final WebClient.Builder webClientBuilder;
     private final ResourceConnectService resourceConnectService;
 
-    @MessageMapping("/create-answer-time")
-    public ResponseMessage createAnswerTime(@Payload RequestMessage<AnswerTime> clientMessage) throws Exception {
+    @MessageMapping("/create-answer-time/{userId}")
+    public void createAnswerTime(@DestinationVariable Long userId, @Payload RequestMessage<AnswerTime> clientMessage, @Header("simpSessionId") String sessionId) throws Exception {
         logClientMessage(clientMessage);
         AnswerTime answerTime = clientMessage.getBody();
         answerTime.setPlayedDateTime(LocalDateTime.now());
+        answerTime.setSocketId(sessionId);
         ResponseObject responseObject = webClientBuilder.build().post()
                 .uri("lb://test-service/api/v1/test/answer-times/")
                 .accept(MediaType.APPLICATION_JSON)
@@ -45,15 +47,16 @@ public class PlayingController {
                 .body(BodyInserters.fromObject(answerTime))
                 .retrieve().bodyToMono(ResponseObject.class)
                 .block();
-        return new ResponseMessage()
-                .builder()
-                .message(responseObject.getData())
-                .status(MessageStatus.SUCCESS)
-                .build();
+        simpMessagingTemplate.convertAndSend("/topic/pre-room/" + userId,
+                new ResponseMessage()
+                        .builder()
+                        .message(responseObject.getData())
+                        .status(MessageStatus.SUCCESS)
+                        .build());
     }
 
-    @MessageMapping("/create-room")
-    public ResponseMessage createRoom(@Payload RequestMessage<RoomRequest> roomRequest) {
+    @MessageMapping("/create-room/{userId}")
+    public void createRoom(@DestinationVariable Long userId, @Payload RequestMessage<RoomRequest> roomRequest) {
         logClientMessage(roomRequest);
         RoomRequest room = roomRequest.getBody();
         room.setCreatedAt(LocalDateTime.now());
@@ -64,11 +67,12 @@ public class PlayingController {
                 .body(BodyInserters.fromObject(room))
                 .retrieve().bodyToMono(ResponseObject.class)
                 .block();
-        return new ResponseMessage()
-                .builder()
-                .message(responseObject.getData())
-                .status(MessageStatus.SUCCESS)
-                .build();
+        simpMessagingTemplate.convertAndSend("/topic/pre-room/" + userId,
+                new ResponseMessage()
+                        .builder()
+                        .message(responseObject.getData())
+                        .status(MessageStatus.SUCCESS)
+                        .build());
     }
 
     @MessageMapping("/statistic/{id}")
@@ -105,12 +109,6 @@ public class PlayingController {
                 .retrieve().bodyToMono(ResponseObject.class)
                 .block();
         log.info("Saved question answer: {}", responseObject);
-    }
-
-    @MessageMapping("/answer/{id}")
-    public void userAnswer(@DestinationVariable Long id, @Payload RequestMessage clientMessage) throws Exception {
-        logClientMessage(clientMessage);
-        simpMessagingTemplate.convertAndSend("/topic/join/" + id, new ResponseMessage().builder().message("").status(MessageStatus.SUCCESS).build());
     }
 
     private void logClientMessage(RequestMessage clientMessage) {

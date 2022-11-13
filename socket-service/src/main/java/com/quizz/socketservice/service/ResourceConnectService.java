@@ -1,7 +1,7 @@
 package com.quizz.socketservice.service;
 
-import com.quizz.socketservice.dto.http.ResponseObject;
 import com.quizz.socketservice.dto.question.Question;
+import com.quizz.socketservice.dto.response.ResponseObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;

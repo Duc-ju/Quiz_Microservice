@@ -60,4 +60,10 @@ public class QuestionService {
     public List<Question> getQuestionsByLessonId(Long lessonId) {
         return questionRepository.findByLessonId(lessonId);
     }
+
+    public int getNumberOfKeysByQuestionId(Long questionId) {
+        Optional<Question> questionOptional = questionRepository.findById(questionId);
+        if (questionOptional.isPresent()) return questionOptional.get().getNumberOfKeys();
+        return -1;
+    }
 }

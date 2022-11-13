@@ -51,4 +51,12 @@ public class QuestionController {
             );
         }
     }
+
+    @GetMapping("/{id}/numberOfKeys")
+    public ResponseEntity<ResponseObject> getNumberOfKeys(@PathVariable Long id) {
+        int numberOfKeys = questionService.getNumberOfKeysByQuestionId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("Return numberOfKeys with questionId: " + id, numberOfKeys)
+        );
+    }
 }

@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class AnswerCount {
-    public int numberOfAnswered;
+@NoArgsConstructor
+public class ResponseObject<T> {
+    private String message;
+    private T data;
 }

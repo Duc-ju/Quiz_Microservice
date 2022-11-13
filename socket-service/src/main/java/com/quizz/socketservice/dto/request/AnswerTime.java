@@ -16,4 +16,6 @@ public class AnswerTime {
     private Long lessonId;
     private Long userId;
     private LocalDateTime playedDateTime;
+    private String socketId;
+    private RoomRequest room;
 }
