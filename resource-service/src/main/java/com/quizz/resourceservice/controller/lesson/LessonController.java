@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/resource/lessons")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Log4j2
 @RequiredArgsConstructor
 public class LessonController {
