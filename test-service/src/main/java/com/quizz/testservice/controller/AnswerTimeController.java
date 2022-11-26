@@ -17,10 +17,21 @@ public class AnswerTimeController {
     private final AnswerTimeService answerTimeService;
 
     @GetMapping(path = "/count")
-    public ResponseEntity<ResponseObject> getAnswerTime(@RequestParam Long lessonId) {
+    public ResponseEntity<ResponseObject> getAnswerTimeCount(@RequestParam Long lessonId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseObject("return count of answer time", answerTimeService
-                        .getAnswerTime(lessonId)));
+                        .getNumberOfAnswerTime(lessonId)));
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ResponseObject> getAnswerTime(@PathVariable Long id) {
+        try {
+            AnswerTime answerTime = answerTimeService.getAnswerTime(id);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject("return answer time", answerTime));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PostMapping(path = "")

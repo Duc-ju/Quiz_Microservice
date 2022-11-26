@@ -23,16 +23,25 @@ public class AnswerTime {
     private Long userId;
     private LocalDateTime playedDateTime;
 
+    @Getter(AccessLevel.NONE)
     @Transient
-    private float accuracy;
+    private double accuracy;
+
+    @Getter(AccessLevel.NONE)
     @Transient
     private int numberOfRight;
+
+    @Getter(AccessLevel.NONE)
     @Transient
     private int numberOfWrong;
+
+    @Getter(AccessLevel.NONE)
     @Transient
-    private float averageDuration;
+    private double averageDuration;
+
+    @Getter(AccessLevel.NONE)
     @Transient
-    private Long point;
+    private long point;
 
     private String socketId;
     private String nickName;
@@ -49,4 +58,45 @@ public class AnswerTime {
     @JoinColumn(name = "room_id")
     @JsonBackReference
     private Room room;
+
+    public int getNumberOfRight() {
+        if (questionAnswers == null) return -1;
+        int count = 0;
+        for (QuestionAnswer questionAnswer : questionAnswers) {
+            if (questionAnswer.isRightAnswer()) count++;
+        }
+        return count;
+    }
+
+    public int getNumberOfWrong() {
+        if (questionAnswers == null) return -1;
+        int count = 0;
+        for (QuestionAnswer questionAnswer : questionAnswers) {
+            if (!questionAnswer.isRightAnswer()) count++;
+        }
+        return count;
+    }
+
+    public double getAccuracy() {
+        if (questionAnswers == null) return -1;
+        return getNumberOfRight() * 1.0 / questionAnswers.size();
+    }
+
+    public Long getPoint() {
+        if (questionAnswers == null) return (long) -1;
+        long point = 0;
+        for (QuestionAnswer questionAnswer : questionAnswers) {
+            point += questionAnswer.getPoint();
+        }
+        return point;
+    }
+
+    public double getAverageDuration() {
+        if (questionAnswers == null) return (long) -1;
+        long sumDuration = 0;
+        for (QuestionAnswer questionAnswer : questionAnswers) {
+            sumDuration += questionAnswer.getDuration();
+        }
+        return sumDuration * (1.0) / questionAnswers.size();
+    }
 }

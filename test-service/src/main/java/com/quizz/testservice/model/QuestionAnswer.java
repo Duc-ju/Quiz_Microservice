@@ -28,6 +28,14 @@ public class QuestionAnswer {
     @Transient
     private boolean rightAnswer;
 
+    private int numberOfRightAnswer;
+
+    @Getter(AccessLevel.NONE)
+    @Transient
+    private Long numberOfAnswerPart;
+
+    private long point;
+
     private int duration;
 
     @ManyToOne
@@ -36,4 +44,14 @@ public class QuestionAnswer {
     @JoinColumn(name = "answer_time_id")
     @JsonBackReference
     private AnswerTime answerTime;
+
+    public Long getNumberOfAnswerPart() {
+        if (questionAnswerParts == null) return (long) -1;
+        return (long) questionAnswerParts.size();
+    }
+
+    public boolean isRightAnswer() {
+        if (questionAnswerParts == null) return false;
+        return numberOfRightAnswer <= questionAnswerParts.stream().filter(QuestionAnswerPart::isRightAnswer).toList().size();
+    }
 }
