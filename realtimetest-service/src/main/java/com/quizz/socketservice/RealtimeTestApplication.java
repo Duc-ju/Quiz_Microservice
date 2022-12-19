@@ -6,9 +6,9 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
 @EnableEurekaClient
-public class SocketServiceApplication {
+public class RealtimeTestApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SocketServiceApplication.class, args);
+        SpringApplication.run(RealtimeTestApplication.class, args);
     }
 }

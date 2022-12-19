@@ -22,8 +22,8 @@ public class SocketRegistration {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String socketId;
-    private String roomId;
-    private String lessonId;
+    private Long roomId;
+    private Long lessonId;
     private LocalDateTime joinedTime;
     private LocalDateTime closedTime;
     private boolean active;

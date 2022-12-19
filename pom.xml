@@ -19,7 +19,7 @@
         <module>test-service</module>
         <module>discovery-server</module>
         <module>api-gateway</module>
-        <module>socket-service</module>
+        <module>realtimetest-service</module>
     </modules>
 
     <properties>

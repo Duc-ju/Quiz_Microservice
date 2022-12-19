@@ -50,7 +50,7 @@ public class SocketRegistrationService {
         socketRegistration.setActive(true);
         socketRegistration.setJoinedTime(LocalDateTime.now());
         socketRegistration.setActive(true);
-        socketRegistration.setRoomId(roomId);
+        socketRegistration.setRoomId(Long.parseLong(roomId));
         saveSocketRegistration(socketRegistration);
         Long numberUserInRoom = socketRegistrationRepositoryCustom.countUserInRoom(roomId);
         if (numberUserInRoom > 0) {

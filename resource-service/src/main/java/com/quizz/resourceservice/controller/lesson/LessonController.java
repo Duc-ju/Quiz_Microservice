@@ -9,6 +9,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Calendar;
 import java.util.List;
@@ -23,6 +25,10 @@ public class LessonController {
     private final LessonService lessonService;
     private final QuestionService questionService;
 
+    public static String getBearerTokenHeader() {
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader("Authorization");
+    }
+
     @GetMapping("")
     public ResponseEntity<ResponseObject> getLessons() {
         List<Lesson> lessons = lessonService.getLessonList();
@@ -31,6 +37,7 @@ public class LessonController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getLesson(@PathVariable Long id) {
+        log.info(getBearerTokenHeader());
         try {
             Lesson lesson = lessonService.getLessonById(id);
             return ResponseEntity.status(HttpStatus.OK).body(
