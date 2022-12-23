@@ -20,14 +20,14 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
-      #resource-service-route
+      #lesson-service-route
       routes[0]:
-        id: resource-service
-        uri: lb://resource-service
+        id: lesson-service
+        uri: lb://lesson-service
         predicates[0]: Path=/api/v1/resource/**
       routes[1]:
-        id: test-service
-        uri: lb://test-service
+        id: room-service
+        uri: lb://room-service
         predicates[0]: Path=/api/v1/test/**
       routes[2]:
         uri: http://localhost:8761
@@ -39,14 +39,23 @@ spring:
         predicates[0]: Path=/eureka/**
         uri: http://localhost:8761
       routes[4]:
-        id: socket-service
+        id: synchronous-test-service
         uri: http://localhost:8085
         filters[0]: SetPath=/
-        predicates[0]: Path=/socket
+        predicates[0]: Path=/synchronous-test
       routes[5]:
-        id: socket-service-static
+        id: synchronous-test-static
         uri: http://localhost:8085
         predicates[0]: Path=/**
+      routes[6]:
+        id: live-test-service
+        uri: http://localhost:8088
+        filters[0]: SetPath=/
+        predicates[0]: Path=/live-test
+        routes[5]:
+          id: live-test-static
+          uri: http://localhost:8088
+          predicates[0]: Path=/**
   security:
     oauth2:
       resourceserver:

@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: live-test-service
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/quizz_socket
+    username: root
+    password:
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+server:
+  port: 8088
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+logging:
+  level:
+    org:
+      type:
+        description:
+          sql: trace
+      hibernate:
+        SQL: debug
+        type:
+          description:
+            sql: trace
