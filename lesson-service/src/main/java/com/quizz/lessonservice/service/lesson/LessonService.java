@@ -90,7 +90,7 @@ public class LessonService {
         Lesson lesson = lessonOptional.get();
 
         ResponseObject playCount = webClientBuilder.build().get()
-                .uri("lb://test-service/api/v1/test/answer-times/count",
+                .uri("lb://room-service/api/v1/room/answer-times/count",
                         uriBuilder -> uriBuilder.queryParam("lessonId", id).build())
                 .retrieve().bodyToMono(ResponseObject.class)
                 .block();

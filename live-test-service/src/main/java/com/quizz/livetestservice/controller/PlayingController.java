@@ -41,7 +41,7 @@ public class PlayingController {
         answerTime.setPlayedDateTime(LocalDateTime.now());
         answerTime.setSocketId(sessionId);
         ResponseObject responseObject = webClientBuilder.build().post()
-                .uri("lb://test-service/api/v1/test/answer-times/")
+                .uri("lb://room-service/api/v1/room/answer-times/")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromObject(answerTime))
@@ -61,7 +61,7 @@ public class PlayingController {
         RoomRequest room = roomRequest.getBody();
         room.setCreatedAt(LocalDateTime.now());
         ResponseObject responseObject = webClientBuilder.build().post()
-                .uri("lb://test-service/api/v1/test/rooms/")
+                .uri("lb://room-service/api/v1/test/rooms/")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromObject(room))
@@ -102,7 +102,7 @@ public class PlayingController {
     public void sendAnswer(@DestinationVariable Long id, @Payload RequestMessage<QuestionAnswer> clientMessage) throws Exception {
         log.info(clientMessage.getBody());
         ResponseObject responseObject = webClientBuilder.build().post()
-                .uri("lb://test-service/api/v1/test/question-answers/")
+                .uri("lb://room-service/api/v1/test/question-answers/")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromObject(clientMessage.getBody()))
