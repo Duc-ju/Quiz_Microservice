@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @RestController
 @CrossOrigin()
-@RequestMapping("/api/v1/resource/static/images")
+@RequestMapping("/api/v1/lesson/static/images")
 @RequiredArgsConstructor
 public class ImageController {
 

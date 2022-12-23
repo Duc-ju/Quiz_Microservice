@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/test/answer-times")
+@RequestMapping("/api/v1/room/answer-times")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AnswerTimeController {
 

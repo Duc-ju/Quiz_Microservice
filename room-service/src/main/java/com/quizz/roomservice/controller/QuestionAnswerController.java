@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/test/question-answers")
+@RequestMapping("/api/v1/room/question-answers")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class QuestionAnswerController {
 

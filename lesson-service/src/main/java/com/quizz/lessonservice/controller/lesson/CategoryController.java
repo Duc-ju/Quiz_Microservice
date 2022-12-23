@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/resource/categories")
+@RequestMapping("/api/v1/lesson/categories")
 @Log4j2
 @RequiredArgsConstructor
 public class CategoryController {

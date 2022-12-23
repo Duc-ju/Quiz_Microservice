@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v1/resource/lessons")
+@RequestMapping(path = "/api/v1/lesson/lessons")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Log4j2
 @RequiredArgsConstructor

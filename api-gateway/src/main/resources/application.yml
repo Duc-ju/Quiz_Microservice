@@ -24,11 +24,11 @@ spring:
       routes[0]:
         id: lesson-service
         uri: lb://lesson-service
-        predicates[0]: Path=/api/v1/resource/**
+        predicates[0]: Path=/api/v1/lesson/**
       routes[1]:
         id: room-service
         uri: lb://room-service
-        predicates[0]: Path=/api/v1/test/**
+        predicates[0]: Path=/api/v1/room/**
       routes[2]:
         uri: http://localhost:8761
         filters[0]: SetPath=/
