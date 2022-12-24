@@ -1,15 +1,7 @@
 spring:
   application:
     name: live-test-service
-  datasource:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/quizz_socket
-    username: root
-    password:
-  jpa:
-    hibernate.ddl-auto: update
-    generate-ddl: true
-    show-sql: true
+    
 server:
   port: 8088
 

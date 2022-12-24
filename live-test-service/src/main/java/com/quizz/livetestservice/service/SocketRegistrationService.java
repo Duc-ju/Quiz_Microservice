@@ -3,10 +3,10 @@ package com.quizz.livetestservice.service;
 import com.quizz.livetestservice.common.MessageStatus;
 import com.quizz.livetestservice.common.ResponseType;
 import com.quizz.livetestservice.dto.response.ResponseMessage;
+import com.quizz.livetestservice.listener.WebSocketEventListener;
 import com.quizz.livetestservice.model.SocketRegistration;
-import com.quizz.livetestservice.repository.SocketRegistrationRepository;
-import com.quizz.livetestservice.repository.SocketRegistrationRepositoryCustomImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -15,30 +15,22 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class SocketRegistrationService {
-
-    private final SocketRegistrationRepository socketRegistrationRepository;
-    private final SocketRegistrationRepositoryCustomImpl socketRegistrationRepositoryCustom;
     private final SimpMessagingTemplate simpMessagingTemplate;
-
-    public SocketRegistration saveSocketRegistration(SocketRegistration socketRegistration) {
-        return socketRegistrationRepository.save(socketRegistration);
-    }
 
     public void handleShutdownSocket(SessionDisconnectEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
-        List<String> roomIdList = socketRegistrationRepositoryCustom.getRoomListBySocketId(headers.getSessionId());
-        socketRegistrationRepositoryCustom.killAllSocketRegistration(headers.getSessionId());
-        for (String roomId : roomIdList) {
-            Long numberUserInRoom = socketRegistrationRepositoryCustom.countUserInRoom(roomId);
-            if (numberUserInRoom > 0) {
-                simpMessagingTemplate.convertAndSend("/topic/room-message/" + roomId,
-                        new ResponseMessage().builder().type(ResponseType.USER_LEFT_ROOM).message(numberUserInRoom).status(MessageStatus.SUCCESS).build());
-            }
+        SocketRegistration socketRegistration = WebSocketEventListener.socketRegistrationMap.get(headers.getSessionId());
+        WebSocketEventListener.killAllSocketRegistration(headers.getSessionId());
+        Long numberUserInRoom = WebSocketEventListener.countUserInRoom(socketRegistration.getRoomId());
+        log.info("socketRegistrationMap: {}", WebSocketEventListener.socketRegistrationMap);
+        if (numberUserInRoom > 0) {
+            simpMessagingTemplate.convertAndSend("/topic/room-message/" + socketRegistration.getRoomId(),
+                    new ResponseMessage().builder().type(ResponseType.USER_LEFT_ROOM).message(numberUserInRoom).status(MessageStatus.SUCCESS).build());
         }
     }
 
@@ -46,13 +38,13 @@ public class SocketRegistrationService {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String roomId = headers.getDestination().split("/")[3];
         SocketRegistration socketRegistration = new SocketRegistration();
-        socketRegistration.setSocketId(headers.getSessionId());
         socketRegistration.setActive(true);
         socketRegistration.setJoinedTime(LocalDateTime.now());
         socketRegistration.setActive(true);
         socketRegistration.setRoomId(Long.parseLong(roomId));
-        saveSocketRegistration(socketRegistration);
-        Long numberUserInRoom = socketRegistrationRepositoryCustom.countUserInRoom(roomId);
+        WebSocketEventListener.socketRegistrationMap.put(headers.getSessionId(), socketRegistration);
+        log.info("socketRegistrationMap: {}", WebSocketEventListener.socketRegistrationMap);
+        Long numberUserInRoom = WebSocketEventListener.countUserInRoom(Long.parseLong(roomId));
         if (numberUserInRoom > 0) {
             simpMessagingTemplate.convertAndSend(headers.getDestination(),
                     new ResponseMessage().builder().type(ResponseType.USER_JOIN_ROOM).message(numberUserInRoom).status(MessageStatus.SUCCESS).build());
@@ -62,8 +54,9 @@ public class SocketRegistrationService {
     public void handleUnsubscribeRoom(SessionUnsubscribeEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String roomId = headers.getDestination().split("/")[3];
-        socketRegistrationRepositoryCustom.killAllSocketRegistration(headers.getSessionId());
-        Long numberUserInRoom = socketRegistrationRepositoryCustom.countUserInRoom(roomId);
+        WebSocketEventListener.killAllSocketRegistration(headers.getSessionId());
+        Long numberUserInRoom = WebSocketEventListener.countUserInRoom(Long.parseLong(roomId));
+        log.info("socketRegistrationMap: {}", WebSocketEventListener.socketRegistrationMap);
         if (numberUserInRoom > 0) {
             simpMessagingTemplate.convertAndSend(headers.getDestination(),
                     new ResponseMessage().builder().type(ResponseType.USER_LEFT_ROOM).message(numberUserInRoom).status(MessageStatus.SUCCESS).build());
