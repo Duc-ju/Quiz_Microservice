@@ -1,10 +1,10 @@
 package com.quizz.lessonservice.model.lesson;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Data
 @AllArgsConstructor
@@ -22,4 +22,9 @@ public class Tag {
     @Column(length = 1024)
     private String image;
 
+    @OneToMany(mappedBy = "tag")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonManagedReference(value = "LessonTag_Tag")
+    private Collection<LessonTag> lessonTags;
 }

@@ -1,5 +1,6 @@
 package com.quizz.lessonservice.model.lesson;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.quizz.lessonservice.model.question.Question;
 import lombok.*;
@@ -35,7 +36,7 @@ public class Lesson {
     @Transient
     @Getter(AccessLevel.NONE)
     private Integer numberOfQuestion;
-    
+
     private String type;
 
     private Date createdAt;
@@ -61,12 +62,14 @@ public class Lesson {
     @JoinColumn(name = "category_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonManagedReference
+    @JsonBackReference
     private Category category;
 
-    @ManyToMany
-    @JoinColumn(name = "tag_id")
-    private Collection<Tag> tags;
+    @OneToMany(mappedBy = "lesson")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonManagedReference(value = "LessonTag_Lesson")
+    private Collection<LessonTag> lessonTags;
 
     @Column(length = 1024)
     private String image;

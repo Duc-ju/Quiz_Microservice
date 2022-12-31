@@ -1,6 +1,6 @@
 package com.quizz.lessonservice.model.lesson;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +22,7 @@ public class Category {
     @OneToMany(mappedBy = "category")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonBackReference
+    @JsonManagedReference
     private Collection<Lesson> lessons;
 
     @Column(length = 1024)
