@@ -35,6 +35,8 @@ public class Lesson {
     @Transient
     @Getter(AccessLevel.NONE)
     private Integer numberOfQuestion;
+    
+    private String type;
 
     private Date createdAt;
     private Date updatedAt;

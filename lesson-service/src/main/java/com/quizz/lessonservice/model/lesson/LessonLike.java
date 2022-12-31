@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -22,4 +23,6 @@ public class LessonLike {
     @JoinColumn(name = "lesson_id")
     @JsonBackReference
     private Lesson lesson;
+
+    private LocalDateTime createdAt;
 }

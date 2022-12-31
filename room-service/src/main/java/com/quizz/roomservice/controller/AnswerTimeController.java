@@ -39,12 +39,4 @@ public class AnswerTimeController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseObject("return answer time", answerTimeService.addAnswerTime(answerTime)));
     }
-
-    @DeleteMapping("/{socketId}")
-    public ResponseEntity<ResponseObject> deleteAnswerTime(@PathVariable String socketId) {
-        answerTimeService.deleteAnswerTimeBySocketId(socketId);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseObject("deleted answer time", null));
-    }
 }

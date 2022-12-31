@@ -20,7 +20,7 @@ public class AnswerTime {
     private Long id;
 
     private Long lessonId;
-    private Long userId;
+    private String userId;
     private LocalDateTime playedDateTime;
 
     @Getter(AccessLevel.NONE)
@@ -43,7 +43,6 @@ public class AnswerTime {
     @Transient
     private long point;
 
-    private String socketId;
     private String nickName;
 
     @OneToMany(mappedBy = "answerTime")

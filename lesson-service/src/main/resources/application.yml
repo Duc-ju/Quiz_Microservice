@@ -3,7 +3,7 @@ spring:
     name: lesson-service
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/quizz_resource
+    url: jdbc:mysql://localhost:3306/quiz_lesson
     username: root
     password:
   jpa:

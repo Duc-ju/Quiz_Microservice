@@ -19,7 +19,7 @@
         <module>room-service</module>
         <module>discovery-server</module>
         <module>api-gateway</module>
-        <module>synchronous-test-service</module>
+        <module>asynchronous-test-service</module>
         <module>live-test-service</module>
     </modules>
 

@@ -52,8 +52,4 @@ public class AnswerTimeService {
         }
         return answerTimeRepository.findById(savedAnswerTime.getId()).get();
     }
-
-    public void deleteAnswerTimeBySocketId(String socketId) {
-        answerTimeRepository.deleteAnswerTimeBySocketId(socketId);
-    }
 }

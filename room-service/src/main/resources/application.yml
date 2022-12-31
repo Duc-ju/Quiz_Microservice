@@ -3,7 +3,7 @@ spring:
     name: room-service
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/quizz_test
+    url: jdbc:mysql://localhost:3306/quiz_room
     username: root
     password:
   jpa:
