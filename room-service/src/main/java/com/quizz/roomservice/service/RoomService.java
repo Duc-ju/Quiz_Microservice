@@ -20,7 +20,7 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    public Room getRoom(Long id) throws Exception {
+    public Room getRoomById(Long id) throws Exception {
         Optional<Room> roomOptional = roomRepository.findById(id);
         if (!roomOptional.isPresent()) {
             throw new Exception("Cannot find room with id " + id);
@@ -29,7 +29,7 @@ public class RoomService {
     }
 
     public Object getLessonByRoomId(Long roomId) throws Exception {
-        Room room = getRoom(roomId);
+        Room room = getRoomById(roomId);
         ResponseObject lesson = webClientBuilder.build().get()
                 .uri("lb://lesson-service/api/v1/resource/lessons/" + room.getLessonId())
                 .retrieve().bodyToMono(ResponseObject.class)

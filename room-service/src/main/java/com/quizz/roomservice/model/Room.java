@@ -18,7 +18,7 @@ public class Room {
     private Long id;
 
     private Long lessonId;
-    private Long userId;
+    private String userId;
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "room")

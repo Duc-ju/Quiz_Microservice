@@ -36,4 +36,16 @@ public class RoomController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    @GetMapping("/{roomId}")
+    public ResponseEntity<ResponseObject> getRoom(@PathVariable Long roomId) {
+        try {
+            Room room = roomService.getRoomById(roomId);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject("Return room with id: " + roomId, room));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }

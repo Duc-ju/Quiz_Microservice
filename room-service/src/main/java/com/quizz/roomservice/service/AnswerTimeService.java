@@ -30,7 +30,7 @@ public class AnswerTimeService {
         return answerTimeCustom.countAnswerTime(lessonId);
     }
 
-    public AnswerTime getAnswerTime(Long id) throws Exception {
+    public AnswerTime getAnswerTimeById(Long id) throws Exception {
         Optional<AnswerTime> answerTimeOptional = answerTimeRepository.findById(id);
         if (!answerTimeOptional.isPresent()) throw new Exception("Answer time not found");
         return answerTimeOptional.get();

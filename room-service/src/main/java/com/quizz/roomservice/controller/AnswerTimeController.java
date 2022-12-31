@@ -26,7 +26,7 @@ public class AnswerTimeController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<ResponseObject> getAnswerTime(@PathVariable Long id) {
         try {
-            AnswerTime answerTime = answerTimeService.getAnswerTime(id);
+            AnswerTime answerTime = answerTimeService.getAnswerTimeById(id);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ResponseObject("return answer time", answerTime));
         } catch (Exception e) {
