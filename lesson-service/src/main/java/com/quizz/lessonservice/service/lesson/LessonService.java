@@ -89,13 +89,17 @@ public class LessonService {
         }
         Lesson lesson = lessonOptional.get();
 
+        lesson.setNumberOfPlayed(getLessonPlayedCount(id));
+        return lessonOptional.get();
+    }
+
+    public Long getLessonPlayedCount(Long lessonId) {
         ResponseObject playCount = webClientBuilder.build().get()
                 .uri("lb://room-service/api/v1/room/answer-times/count",
-                        uriBuilder -> uriBuilder.queryParam("lessonId", id).build())
+                        uriBuilder -> uriBuilder.queryParam("lessonId", lessonId).build())
                 .retrieve().bodyToMono(ResponseObject.class)
                 .block();
-        lesson.setNumberOfPlayed(Long.valueOf(playCount.getData().toString()));
-        return lessonOptional.get();
+        return Long.valueOf(playCount.getData().toString());
     }
 
     /**

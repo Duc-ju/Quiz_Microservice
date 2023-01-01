@@ -19,7 +19,15 @@ public class QuestionAnswerController {
     @PostMapping("")
     public ResponseEntity<ResponseObject> addQuestionAnswer(@RequestBody QuestionAnswer questionAnswer) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("return answer of question added", questionAnswerService.addQuestionAnswer(questionAnswer))
+                new ResponseObject("return question answer added", questionAnswerService.addQuestionAnswer(questionAnswer))
+        );
+    }
+
+    @DeleteMapping("/{questionAnswerId}")
+    public ResponseEntity<ResponseObject> addQuestionAnswer(@PathVariable Long questionAnswerId) {
+        questionAnswerService.deleteQuestionAnswer(questionAnswerId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("Deleted question answer", null)
         );
     }
 }

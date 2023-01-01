@@ -30,13 +30,14 @@ public class StatisticController {
         }
     }
 
-    @GetMapping("/answer-times/{answerTimeId}/chart")
+    @GetMapping("/answer-times/{answerTimeId}/questions/{questionId}/chart")
     public ResponseEntity<ResponseObject> getAfterQuestionRank(
-            @PathVariable Long answerTimeId
+            @PathVariable Long answerTimeId,
+            @PathVariable Long questionId
     ) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject("Return question chart", statisticService.getAfterQuestionChart(answerTimeId)));
+                    .body(new ResponseObject("Return question chart", statisticService.getAfterQuestionChart(answerTimeId, questionId)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject(e.getMessage(), null));
@@ -47,7 +48,7 @@ public class StatisticController {
     public ResponseEntity<ResponseObject> getAnswerTimeStatistic(@PathVariable Long answerTimeId) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject("Return question statistic", statisticService.getAnswerTimeStatistic(answerTimeId)));
+                    .body(new ResponseObject("Return answer-time statistic", statisticService.getAnswerTimeStatistic(answerTimeId)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject(e.getMessage(), null));
@@ -58,7 +59,7 @@ public class StatisticController {
     public ResponseEntity<ResponseObject> getRoomStatistic(@PathVariable Long roomId) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject("Return question statistic", statisticService.getRoomStatistic(roomId)));
+                    .body(new ResponseObject("Return room statistic", statisticService.getRoomStatisticById(roomId)));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

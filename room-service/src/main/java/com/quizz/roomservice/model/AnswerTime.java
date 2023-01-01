@@ -90,6 +90,16 @@ public class AnswerTime {
         return point;
     }
 
+    public Long getPoint(Long questionId) {
+        if (questionAnswers == null) return (long) -1;
+        long point = 0;
+        for (QuestionAnswer questionAnswer : questionAnswers) {
+            point += questionAnswer.getPoint();
+            if (questionId.equals(questionAnswer.getQuestionId())) break;
+        }
+        return point;
+    }
+
     public double getAverageDuration() {
         if (questionAnswers == null) return (long) -1;
         long sumDuration = 0;

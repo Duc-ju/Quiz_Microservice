@@ -31,7 +31,7 @@ public class Lesson {
     private Float averageAccuracy;
 
     @Transient
-    private Long numberOfPlayed;
+    private Long numberOfPlayed = Long.valueOf(0);
 
     @Transient
     @Getter(AccessLevel.NONE)

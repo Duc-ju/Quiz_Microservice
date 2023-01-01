@@ -66,6 +66,7 @@ public class StatisticService {
                         BeanUtils.copyProperties(questionAnswerPart, answerStatistic);
                         answerStatistic.setSelected(true);
                     }
+                    answerStatistic.setId(Long.parseLong(answer.get("id").toString()));
                     answerStatistic.setTitle((String) answer.get("title"));
                     questionAnswerPartStatistics.add(answerStatistic);
                 }
@@ -78,7 +79,7 @@ public class StatisticService {
         return answerTimeStatistic;
     }
 
-    public RoomStatistic getRoomStatistic(Long roomId) throws Exception {
+    public RoomStatistic getRoomStatisticById(Long roomId) throws Exception {
         RoomStatistic roomStatistic = new RoomStatistic();
         Room room = roomService.getRoomById(roomId);
         List<AnswerTime> answerTimeStatistics = new ArrayList<>();
@@ -91,9 +92,26 @@ public class StatisticService {
         return roomStatistic;
     }
 
-    public ChartStatistic getAfterQuestionChart(Long answerTimeId) throws Exception {
+    public RoomStatistic getRoomStatisticByLessonId(Long lessonId) throws Exception {
+        RoomStatistic roomStatistic = new RoomStatistic();
+        List<AnswerTime> answerTimes = answerTimeService.getByLessonId(lessonId);
+        List<AnswerTime> answerTimeStatistics = new ArrayList<>();
+        for (AnswerTime answerTime : answerTimes) {
+            AnswerTimeStatistic answerStatistic = getAnswerTimeStatistic(answerTime.getId());
+            answerTimeStatistics.add(answerStatistic);
+        }
+        roomStatistic.setAnswerTimes(answerTimeStatistics);
+        return roomStatistic;
+    }
+
+    public ChartStatistic getAfterQuestionChart(Long answerTimeId, Long questionId) throws Exception {
         AnswerTime answerTime = answerTimeService.getAnswerTimeById(answerTimeId);
-        RoomStatistic roomStatistic = getRoomStatistic(answerTime.getRoom().getId());
-        return roomStatistic.getChartStatistic(answerTime.getUserId());
+        RoomStatistic roomStatistic = null;
+        if (answerTime.getRoom() != null) {
+            roomStatistic = getRoomStatisticById(answerTime.getRoom().getId());
+        } else {
+            roomStatistic = getRoomStatisticByLessonId(answerTime.getLessonId());
+        }
+        return roomStatistic.getChartStatistic(answerTime.getUserId(), questionId);
     }
 }

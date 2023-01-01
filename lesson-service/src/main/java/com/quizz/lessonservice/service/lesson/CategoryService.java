@@ -1,6 +1,7 @@
 package com.quizz.lessonservice.service.lesson;
 
 import com.quizz.lessonservice.model.lesson.Category;
+import com.quizz.lessonservice.model.lesson.Lesson;
 import com.quizz.lessonservice.repository.lesson.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final LessonService lessonService;
 
     /**
      * This method to get belong to category
@@ -21,7 +23,13 @@ public class CategoryService {
      * @throws Exception
      */
     public List<Category> getCategoryList() {
-        return categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll();
+        for (Category category : categories) {
+            for (Lesson lesson : category.getLessons()) {
+                lesson.setNumberOfPlayed(lessonService.getLessonPlayedCount(lesson.getId()));
+            }
+        }
+        return categories;
     }
 
     public Category addCategory(Category category) {

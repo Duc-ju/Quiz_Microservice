@@ -36,6 +36,10 @@ public class AnswerTimeService {
         return answerTimeOptional.get();
     }
 
+    public List<AnswerTime> getByLessonId(Long lessonId) throws Exception {
+        return answerTimeRepository.getByLessonId(lessonId);
+    }
+
     public AnswerTime addAnswerTime(AnswerTime answerTime) {
         AnswerTime savedAnswerTime = answerTimeRepository.save(answerTime);
         if (savedAnswerTime.getQuestionAnswers() != null) {

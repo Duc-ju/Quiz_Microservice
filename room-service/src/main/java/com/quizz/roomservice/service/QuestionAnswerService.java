@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,5 +27,11 @@ public class QuestionAnswerService {
         Collection<QuestionAnswerPart> questionAnswerPartsSaved = questionAnswerPartRepository.saveAll(questionAnswerParts);
         questionAnswerSaved.setQuestionAnswerParts(questionAnswerPartsSaved);
         return questionAnswerSaved;
+    }
+
+    public void deleteQuestionAnswer(Long id) {
+        List<QuestionAnswerPart> questionAnswerParts = questionAnswerPartRepository.getQuestionAnswerPartByQuestionAnswerId(id);
+        questionAnswerPartRepository.deleteAll(questionAnswerParts);
+        questionAnswerRepository.deleteById(id);
     }
 }
