@@ -75,14 +75,8 @@ public class PlayingController {
                         .build());
     }
 
-    @MessageMapping("/statistic/{id}")
-    public ResponseMessage statistic(@DestinationVariable Long id, @Payload RequestMessage clientMessage) throws Exception {
-        logClientMessage(clientMessage);
-        return new ResponseMessage().builder().message("").status(MessageStatus.SUCCESS).build();
-    }
-
-    @MessageMapping("/start-room/{id}")
-    public void startRoom(@DestinationVariable Long id, @Payload RequestMessage<String> clientMessage) throws Exception {
+    @MessageMapping("/start-room/{roomId}")
+    public void startRoom(@DestinationVariable Long roomId, @Payload RequestMessage<String> clientMessage) throws Exception {
         List<Question> questions = resourceConnectService.getQuestionList(Long.valueOf(clientMessage.getBody()));
         Question question;
         int questionSize = questions.size();
@@ -92,14 +86,20 @@ public class PlayingController {
             if (i == questionSize - 1) message = ResponseType.LAST_QUESTION;
             else if (i == 0) message = ResponseType.FIRST_QUESTION;
             else message = ResponseType.NEXT_QUESTION;
-            simpMessagingTemplate.convertAndSend("/topic/room-message/" + id,
+            simpMessagingTemplate.convertAndSend("/topic/room-message/" + roomId,
                     new ResponseMessage().builder().type(message).message(question).status(MessageStatus.SUCCESS).build());
             Thread.sleep(question.getDuration() * 1000);
+            simpMessagingTemplate.convertAndSend("/topic/room-admin/" + roomId,
+                    new ResponseMessage()
+                            .builder()
+                            .message(resourceConnectService.getRoomStatistic(roomId))
+                            .status(MessageStatus.SUCCESS)
+                            .build());
         }
     }
 
-    @MessageMapping("/send-answer/{id}")
-    public void sendAnswer(@DestinationVariable Long id, @Payload RequestMessage<QuestionAnswer> clientMessage) throws Exception {
+    @MessageMapping("/send-answer/{roomId}")
+    public void sendAnswer(@DestinationVariable Long roomId, @Payload RequestMessage<QuestionAnswer> clientMessage) throws Exception {
         log.info(clientMessage.getBody());
         ResponseObject responseObject = webClientBuilder.build().post()
                 .uri("lb://room-service/api/v1/test/question-answers/")

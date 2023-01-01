@@ -1,6 +1,7 @@
 package com.quizz.asynchronoustestservice.listener;
 
 import com.quizz.asynchronoustestservice.model.SocketRegistration;
+import com.quizz.asynchronoustestservice.model.UserInfo;
 import com.quizz.asynchronoustestservice.service.SocketRegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -11,7 +12,9 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -21,10 +24,12 @@ public class WebSocketEventListener {
 
     private final SocketRegistrationService socketRegistrationService;
     public static Map<String, SocketRegistration> socketRegistrationMap = new HashMap<>();
+    public static Map<String, UserInfo> userInfoMap = new HashMap<>();
 
     @EventListener
     private void handleSessionConnected(SessionConnectEvent event) {
         log.info("Socket connected: {}", event);
+        socketRegistrationService.handleSessionConnected(event);
     }
 
     @EventListener
@@ -45,14 +50,15 @@ public class WebSocketEventListener {
         socketRegistrationService.handleUnsubscribeRoom(event);
     }
 
-    public static Long countUserInRoom(Long roomId) {
-        Long count = Long.valueOf(0);
+    public static List<UserInfo> getListUserInRoom(Long roomId) {
+        List<UserInfo> userInfos = new ArrayList<>();
         for (String key : socketRegistrationMap.keySet()) {
-            if (socketRegistrationMap.get(key).getRoomId().equals(roomId)) {
-                count++;
+            SocketRegistration socketRegistration = socketRegistrationMap.get(key);
+            if (socketRegistration.getRoomId().equals(roomId)) {
+                userInfos.add(socketRegistration.getUserInfo());
             }
         }
-        return count;
+        return userInfos;
     }
 
     public static void killAllSocketRegistration(String socketId) {

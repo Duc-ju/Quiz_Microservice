@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -17,6 +18,7 @@ public class RoomService {
     private final WebClient.Builder webClientBuilder;
 
     public Room createRoom(Room room) {
+        room.setCreatedAt(LocalDateTime.now());
         return roomRepository.save(room);
     }
 

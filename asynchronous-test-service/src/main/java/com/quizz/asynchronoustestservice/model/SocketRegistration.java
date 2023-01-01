@@ -19,4 +19,5 @@ public class SocketRegistration {
     private LocalDateTime joinedTime;
     private LocalDateTime closedTime;
     private boolean active;
+    private UserInfo userInfo;
 }

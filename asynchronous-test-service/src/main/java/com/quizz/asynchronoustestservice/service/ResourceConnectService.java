@@ -17,9 +17,17 @@ public class ResourceConnectService {
 
     public List<Question> getQuestionList(Long lessonId) {
         ResponseObject<List<Question>> questions = webClientBuilder.build().get()
-                .uri("lb://lesson-service/api/v1/resource/lessons/" + lessonId + "/questions")
+                .uri("lb://lesson-service/api/v1/lesson/lessons/" + lessonId + "/questions")
                 .retrieve().bodyToMono(new ParameterizedTypeReference<ResponseObject<List<Question>>>() {
                 })
+                .block();
+        return questions.getData();
+    }
+
+    public Object getRoomStatistic(Long roomId) {
+        ResponseObject questions = webClientBuilder.build().get()
+                .uri("lb://room-service/api/v1/room/statistic/rooms/" + roomId)
+                .retrieve().bodyToMono(ResponseObject.class)
                 .block();
         return questions.getData();
     }
