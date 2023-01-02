@@ -57,6 +57,11 @@ public class PlayingController {
                     responseMessage);
             Thread.sleep(Constant.PENDING_QUESTION_TIME);
         }
+        ResponseMessage endMessage = new ResponseMessage().builder().type(MessageType.SEND_END_ROOM).status(MessageStatus.SUCCESS).message(null).build();
+        simpMessagingTemplate.convertAndSend("/topic/room-admin/" + roomId,
+                endMessage);
+        simpMessagingTemplate.convertAndSend("/topic/room-message/" + roomId,
+                endMessage);
     }
 
     private void logClientMessage(RequestMessage clientMessage) {

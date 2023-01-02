@@ -9,4 +9,5 @@ public class MessageType {
     public static final String SEND_STATISTIC = "SEND_STATISTIC";
 
     public static final String SEND_START_ROOM = "SEND_START_ROOM";
+    public static final String SEND_END_ROOM = "SEND_END_ROOM";
 }
