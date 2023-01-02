@@ -1,7 +1,7 @@
 package com.quizz.asynchronoustestservice.service;
 
 import com.quizz.asynchronoustestservice.common.MessageStatus;
-import com.quizz.asynchronoustestservice.common.ResponseType;
+import com.quizz.asynchronoustestservice.common.MessageType;
 import com.quizz.asynchronoustestservice.dto.response.ResponseMessage;
 import com.quizz.asynchronoustestservice.listener.WebSocketEventListener;
 import com.quizz.asynchronoustestservice.model.SocketRegistration;
@@ -34,9 +34,11 @@ public class SocketRegistrationService {
         if (socketRegistration == null) return;
         List<UserInfo> listUserInRoom = WebSocketEventListener.getListUserInRoom(socketRegistration.getRoomId());
         log.info("socketRegistrationMap: {}", WebSocketEventListener.socketRegistrationMap);
+        simpMessagingTemplate.convertAndSend("/topic/room-admin/" + socketRegistration.getRoomId(),
+                new ResponseMessage().builder().type(MessageType.LEFT_ROOM).message(listUserInRoom).status(MessageStatus.SUCCESS).build());
         if (listUserInRoom.size() > 0) {
             simpMessagingTemplate.convertAndSend("/topic/room-message/" + socketRegistration.getRoomId(),
-                    new ResponseMessage().builder().type(ResponseType.USER_LEFT_ROOM).message(listUserInRoom).status(MessageStatus.SUCCESS).build());
+                    new ResponseMessage().builder().type(MessageType.LEFT_ROOM).message(listUserInRoom).status(MessageStatus.SUCCESS).build());
         }
     }
 
@@ -44,20 +46,21 @@ public class SocketRegistrationService {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String roomId = headers.getDestination().split("/")[3];
         String checkerRole = headers.getDestination().split("/")[2];
-        if ("room-admin".equals(checkerRole)) {
-            return;
+        if (!"room-admin".equals(checkerRole)) {
+            SocketRegistration socketRegistration = new SocketRegistration();
+            socketRegistration.setActive(true);
+            socketRegistration.setJoinedTime(LocalDateTime.now());
+            socketRegistration.setRoomId(roomId);
+            socketRegistration.setUserInfo(WebSocketEventListener.userInfoMap.get(headers.getSessionId()));
+            WebSocketEventListener.socketRegistrationMap.put(headers.getSessionId(), socketRegistration);
         }
-        SocketRegistration socketRegistration = new SocketRegistration();
-        socketRegistration.setActive(true);
-        socketRegistration.setJoinedTime(LocalDateTime.now());
-        socketRegistration.setRoomId(Long.parseLong(roomId));
-        socketRegistration.setUserInfo(WebSocketEventListener.userInfoMap.get(headers.getSessionId()));
-        WebSocketEventListener.socketRegistrationMap.put(headers.getSessionId(), socketRegistration);
         log.info("socketRegistrationMap: {}", WebSocketEventListener.socketRegistrationMap);
-        List<UserInfo> listUserInRoom = WebSocketEventListener.getListUserInRoom(Long.parseLong(roomId));
+        List<UserInfo> listUserInRoom = WebSocketEventListener.getListUserInRoom(roomId);
+        simpMessagingTemplate.convertAndSend("/topic/room-admin/" + roomId,
+                new ResponseMessage().builder().type(MessageType.JOIN_ROOM).message(listUserInRoom).status(MessageStatus.SUCCESS).build());
         if (listUserInRoom.size() > 0) {
             simpMessagingTemplate.convertAndSend(headers.getDestination(),
-                    new ResponseMessage().builder().type(ResponseType.USER_JOIN_ROOM).message(listUserInRoom).status(MessageStatus.SUCCESS).build());
+                    new ResponseMessage().builder().type(MessageType.JOIN_ROOM).message(listUserInRoom).status(MessageStatus.SUCCESS).build());
         }
     }
 
@@ -65,11 +68,13 @@ public class SocketRegistrationService {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String roomId = headers.getDestination().split("/")[3];
         WebSocketEventListener.killAllSocketRegistration(headers.getSessionId());
-        List<UserInfo> listUserInRoom = WebSocketEventListener.getListUserInRoom(Long.parseLong(roomId));
+        List<UserInfo> listUserInRoom = WebSocketEventListener.getListUserInRoom(roomId);
         log.info("socketRegistrationMap: {}", WebSocketEventListener.socketRegistrationMap);
+        simpMessagingTemplate.convertAndSend("/topic/room-admin/" + roomId,
+                new ResponseMessage().builder().type(MessageType.LEFT_ROOM).message(listUserInRoom).status(MessageStatus.SUCCESS).build());
         if (listUserInRoom.size() > 0) {
             simpMessagingTemplate.convertAndSend(headers.getDestination(),
-                    new ResponseMessage().builder().type(ResponseType.USER_LEFT_ROOM).message(listUserInRoom).status(MessageStatus.SUCCESS).build());
+                    new ResponseMessage().builder().type(MessageType.LEFT_ROOM).message(listUserInRoom).status(MessageStatus.SUCCESS).build());
         }
     }
 

@@ -50,7 +50,7 @@ public class WebSocketEventListener {
         socketRegistrationService.handleUnsubscribeRoom(event);
     }
 
-    public static List<UserInfo> getListUserInRoom(Long roomId) {
+    public static List<UserInfo> getListUserInRoom(String roomId) {
         List<UserInfo> userInfos = new ArrayList<>();
         for (String key : socketRegistrationMap.keySet()) {
             SocketRegistration socketRegistration = socketRegistrationMap.get(key);

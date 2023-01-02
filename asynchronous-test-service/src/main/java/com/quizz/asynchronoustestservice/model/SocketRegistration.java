@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class SocketRegistration {
 
     private Long id;
-    private Long roomId;
+    private String roomId;
     private Long lessonId;
     private LocalDateTime joinedTime;
     private LocalDateTime closedTime;
