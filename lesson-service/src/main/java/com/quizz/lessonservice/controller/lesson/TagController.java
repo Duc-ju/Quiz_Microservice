@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/lesson/tags")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Log4j2
 @RequiredArgsConstructor
 public class TagController {
