@@ -1,5 +1,6 @@
 package com.quizz.roomservice.service;
 
+import com.quizz.roomservice.event.AnswerTimeAddedEvent;
 import com.quizz.roomservice.model.AnswerTime;
 import com.quizz.roomservice.model.QuestionAnswer;
 import com.quizz.roomservice.model.QuestionAnswerPart;
@@ -8,6 +9,7 @@ import com.quizz.roomservice.repository.AnswerTimeRepositoryCustomImpl;
 import com.quizz.roomservice.repository.QuestionAnswerPartRepository;
 import com.quizz.roomservice.repository.QuestionAnswerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,12 +21,9 @@ public class AnswerTimeService {
 
     private final AnswerTimeRepository answerTimeRepository;
     private final AnswerTimeRepositoryCustomImpl answerTimeCustom;
-
-    private final QuestionAnswerService questionAnswerService;
-
     private final QuestionAnswerRepository questionAnswerRepository;
-
     private final QuestionAnswerPartRepository questionAnswerPartRepository;
+    private final KafkaTemplate<String, AnswerTimeAddedEvent> kafkaTemplate;
 
     public Long getNumberOfAnswerTime(Long lessonId) {
         return answerTimeCustom.countAnswerTime(lessonId);
@@ -54,6 +53,10 @@ public class AnswerTimeService {
             }
             questionAnswerPartRepository.saveAll(questionAnswer.getQuestionAnswerParts());
         }
+        AnswerTimeAddedEvent answerTimeAddedEvent = new AnswerTimeAddedEvent();
+        answerTimeAddedEvent.setRoomId(savedAnswerTime.getRoom() == null ? null : savedAnswerTime.getRoom().getId());
+        answerTimeAddedEvent.setAnswerTimeId(savedAnswerTime.getId());
+        kafkaTemplate.send("notificationTopic", answerTimeAddedEvent);
         return answerTimeRepository.findById(savedAnswerTime.getId()).get();
     }
 }

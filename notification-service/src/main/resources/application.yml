@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: notification-service
+  kafka:
+    template:
+      default-topic: notificationTopic
+    consumer:
+      group-id: notificationId
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            type:
+              mapping: event:com.quizz.notificationservice.event.AnswerTimeAddedEvent
+    bootstrap-servers: localhost:9092
+
+server:
+  port: 8086

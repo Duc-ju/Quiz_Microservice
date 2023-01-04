@@ -21,6 +21,7 @@
         <module>api-gateway</module>
         <module>asynchronous-test-service</module>
         <module>live-test-service</module>
+        <module>notification-service</module>
     </modules>
 
     <properties>
