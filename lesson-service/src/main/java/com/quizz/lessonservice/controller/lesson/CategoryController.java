@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/lesson/categories")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Log4j2
 @RequiredArgsConstructor
 public class CategoryController {
