@@ -93,6 +93,15 @@ public class LessonService {
         return lessonOptional.get();
     }
 
+    public Lesson getLessonRaw(Long id) throws Exception {
+        Optional<Lesson> lessonOptional = lessonRepository.findById(id);
+        if (!lessonOptional.isPresent()) {
+            throw new Exception("Cannot found lesson with id " + id);
+        }
+        Lesson lesson = lessonOptional.get();
+        return lessonOptional.get();
+    }
+
     public Long getLessonPlayedCount(Long lessonId) {
         ResponseObject playCount = webClientBuilder.build().get()
                 .uri("lb://room-service/api/v1/room/answer-times/count",

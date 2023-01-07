@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,9 +34,17 @@ public class RoomService {
     public Object getLessonByRoomId(Long roomId) throws Exception {
         Room room = getRoomById(roomId);
         ResponseObject lesson = webClientBuilder.build().get()
-                .uri("lb://lesson-service/api/v1/resource/lessons/" + room.getLessonId())
+                .uri("lb://lesson-service/api/v1/resource/lessons/" + room.getLessonId() + "/raw")
                 .retrieve().bodyToMono(ResponseObject.class)
                 .block();
         return lesson.getData();
+    }
+
+    public List<Room> findAllByUserId(String userId) {
+        return roomRepository.findAllByUserId(userId);
+    }
+
+    public List<Room> findAll() {
+        return roomRepository.findAll();
     }
 }

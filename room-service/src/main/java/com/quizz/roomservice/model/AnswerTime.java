@@ -77,7 +77,7 @@ public class AnswerTime {
     }
 
     public double getAccuracy() {
-        if (questionAnswers == null) return -1;
+        if (questionAnswers == null || questionAnswers.isEmpty()) return 0;
         return getNumberOfRight() * 1.0 / questionAnswers.size();
     }
 

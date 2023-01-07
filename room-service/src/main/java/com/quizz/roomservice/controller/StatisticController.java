@@ -65,4 +65,15 @@ public class StatisticController {
         }
 
     }
+
+    @GetMapping("/rooms")
+    public ResponseEntity<ResponseObject> getAllRoomStatistic() {
+        try {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject("Return rooms statistic", statisticService.getReportList("1")));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+    }
 }

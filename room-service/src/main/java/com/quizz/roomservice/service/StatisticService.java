@@ -25,38 +25,55 @@ public class StatisticService {
 
     private final RoomService roomService;
 
-    public AnswerTimeStatistic getAnswerTimeStatistic(Long answerTimeId) throws Exception {
-        AnswerTime answerTime = answerTimeService.getAnswerTimeById(answerTimeId);
+    public LinkedHashMap getLessonById(Long lessonId) {
         ResponseObject response = webClientBuilder.build().get()
-                .uri("lb://lesson-service/api/v1/lesson/lessons/" + answerTime.getLessonId())
+                .uri("lb://lesson-service/api/v1/lesson/lessons/" + lessonId + "/raw")
                 .retrieve().bodyToMono(ResponseObject.class)
                 .block();
+        return (LinkedHashMap) response.getData();
+    }
+
+    public AnswerTimeStatistic getAnswerTimeStatistic(Long answerTimeId) throws Exception {
+        AnswerTime answerTime = answerTimeService.getAnswerTimeById(answerTimeId);
+        LinkedHashMap lessonMap = getLessonById(answerTime.getLessonId());
+        return getAnswerTimeCommonStatistic(answerTime, lessonMap);
+    }
+
+    public AnswerTimeStatistic getAnswerTimeStatistic(Long answerTimeId, LinkedHashMap lessonMap) throws Exception {
+        AnswerTime answerTime = answerTimeService.getAnswerTimeById(answerTimeId);
+        return getAnswerTimeCommonStatistic(answerTime, lessonMap);
+    }
+
+    public AnswerTimeStatistic getAnswerTimeCommonStatistic(AnswerTime answerTime, LinkedHashMap lessonMap) throws Exception {
         AnswerTimeStatistic answerTimeStatistic = new AnswerTimeStatistic();
         BeanUtils.copyProperties(answerTime, answerTimeStatistic);
-        LinkedHashMap lessonMap = (LinkedHashMap) response.getData();
         answerTimeStatistic.setLessonTitle((String) lessonMap.get("title"));
         answerTimeStatistic.setLessonDescription((String) lessonMap.get("description"));
         List<LinkedHashMap> questions = (List<LinkedHashMap>) lessonMap.get("questions");
         Collection<QuestionAnswer> questionStatistics = new ArrayList<>();
-        for (QuestionAnswer questionAnswer : answerTimeStatistic.getQuestionAnswers()) {
+        for (LinkedHashMap question : questions) {
             QuestionStatistic questionStatistic = new QuestionStatistic();
-            BeanUtils.copyProperties(questionAnswer, questionStatistic);
-            LinkedHashMap currentQuestion = null;
-            for (LinkedHashMap questionMap : questions) {
-                if (questionMap.get("id").toString().equals(questionAnswer.getQuestionId().toString())) {
-                    currentQuestion = questionMap;
+            QuestionAnswer foundQuestionAnswer = null;
+            for (QuestionAnswer questionAnswer : answerTime.getQuestionAnswers()) {
+                if (questionAnswer.getQuestionId().equals(Long.parseLong(question.get("id").toString()))) {
+                    foundQuestionAnswer = questionAnswer;
                     break;
                 }
             }
-            if (currentQuestion != null) {
-                questionStatistic.setTitle((String) currentQuestion.get("title"));
-                questionStatistic.setImage((String) currentQuestion.get("image"));
-                List<QuestionAnswerPart> questionAnswerPartStatistics = new ArrayList<>();
-                List<LinkedHashMap> answers = (List<LinkedHashMap>) currentQuestion.getOrDefault("answers", new ArrayList<>());
-                for (LinkedHashMap answer : answers) {
-                    AnswerStatistic answerStatistic = new AnswerStatistic();
+            if (foundQuestionAnswer != null) {
+                BeanUtils.copyProperties(foundQuestionAnswer, questionStatistic);
+            } else {
+                questionStatistic.setId(Long.parseLong(question.get("id").toString()));
+                questionStatistic.setNumberOfRightAnswer(Integer.parseInt(question.get("numberOfKeys").toString()));
+            }
+            List<QuestionAnswerPart> questionAnswerPartStatistics = new ArrayList<>();
+            List<LinkedHashMap> answers = (List<LinkedHashMap>) question.getOrDefault("answers", new ArrayList<>());
+            for (LinkedHashMap answer : answers) {
+                AnswerStatistic answerStatistic = new AnswerStatistic();
+                answerStatistic.setRightAnswer(false);
+                if (foundQuestionAnswer != null) {
                     QuestionAnswerPart questionAnswerPart = null;
-                    for (QuestionAnswerPart questionAnswerPartFind : questionAnswer.getQuestionAnswerParts()) {
+                    for (QuestionAnswerPart questionAnswerPartFind : foundQuestionAnswer.getQuestionAnswerParts()) {
                         if (questionAnswerPartFind.getAnswerId().toString().equals(answer.get("id").toString())) {
                             questionAnswerPart = questionAnswerPartFind;
                             break;
@@ -66,14 +83,15 @@ public class StatisticService {
                         BeanUtils.copyProperties(questionAnswerPart, answerStatistic);
                         answerStatistic.setSelected(true);
                     }
-                    answerStatistic.setId(Long.parseLong(answer.get("id").toString()));
-                    answerStatistic.setTitle((String) answer.get("title"));
-                    questionAnswerPartStatistics.add(answerStatistic);
                 }
-                questionStatistic.setQuestionAnswerParts(questionAnswerPartStatistics);
+                answerStatistic.setId(Long.parseLong(answer.get("id").toString()));
+                answerStatistic.setTitle((String) answer.get("title"));
+                questionAnswerPartStatistics.add(answerStatistic);
             }
+            questionStatistic.setQuestionAnswerParts(questionAnswerPartStatistics);
+            questionStatistic.setTitle((String) question.get("title"));
+            questionStatistic.setImage((String) question.get("image"));
             questionStatistics.add(questionStatistic);
-
         }
         answerTimeStatistic.setQuestionAnswers(questionStatistics);
         return answerTimeStatistic;
@@ -82,12 +100,15 @@ public class StatisticService {
     public RoomStatistic getRoomStatisticById(Long roomId) throws Exception {
         RoomStatistic roomStatistic = new RoomStatistic();
         Room room = roomService.getRoomById(roomId);
+        LinkedHashMap lessonMap = getLessonById(room.getLessonId());
         List<AnswerTime> answerTimeStatistics = new ArrayList<>();
         for (AnswerTime answerTime : room.getAnswerTimes()) {
             AnswerTimeStatistic answerStatistic = getAnswerTimeStatistic(answerTime.getId());
             answerTimeStatistics.add(answerStatistic);
         }
         BeanUtils.copyProperties(room, roomStatistic);
+        roomStatistic.setLessonTitle((String) lessonMap.get("title"));
+        roomStatistic.setLessonDescription((String) lessonMap.get("description"));
         roomStatistic.setAnswerTimes(answerTimeStatistics);
         return roomStatistic;
     }
@@ -134,5 +155,15 @@ public class StatisticService {
         chartStatistic.setUserRankStatistics(userRankStatistics);
         chartStatistic.setCurrentRank(1);
         return chartStatistic;
+    }
+
+    public List<RoomStatistic> getReportList(String userId) throws Exception {
+//        List<Room> rooms = roomService.findAllByUserId(userId);
+        List<Room> rooms = roomService.findAll();
+        List<RoomStatistic> roomStatistics = new ArrayList<>();
+        for (Room room : rooms) {
+            roomStatistics.add(getRoomStatisticById(room.getId()));
+        }
+        return roomStatistics;
     }
 }

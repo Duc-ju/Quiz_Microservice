@@ -51,6 +51,21 @@ public class LessonController {
         }
     }
 
+    @GetMapping("/{id}/raw")
+    public ResponseEntity<ResponseObject> getLessonRaw(@PathVariable Long id) {
+        log.info(getBearerTokenHeader());
+        try {
+            Lesson lesson = lessonService.getLessonRaw(id);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("Return lesson", lesson)
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject(e.getMessage(), null)
+            );
+        }
+    }
+
     @PostMapping("")
     public ResponseEntity<ResponseObject> addLesson(@RequestBody Lesson lesson) {
         lesson.setDisFlg(true);

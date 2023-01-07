@@ -102,6 +102,7 @@ public class RoomStatistic extends Room {
 
     public double getAccuracy() {
         if (accuracy == 0) {
+            if (getAnswerTimes().size() == 0) return 0;
             List<AnswerTime> answerTimes = getAnswerTimes().stream().toList();
             double sum = 0;
             for (AnswerTime answerTime : answerTimes) {
@@ -110,5 +111,9 @@ public class RoomStatistic extends Room {
             return sum / getAnswerTimes().size();
         }
         return accuracy;
+    }
+
+    public void reduceQuestionAnswer() {
+
     }
 }
