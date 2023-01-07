@@ -105,13 +105,34 @@ public class StatisticService {
     }
 
     public ChartStatistic getAfterQuestionChart(Long answerTimeId, Long questionId) throws Exception {
-        AnswerTime answerTime = answerTimeService.getAnswerTimeById(answerTimeId);
-        RoomStatistic roomStatistic = null;
-        if (answerTime.getRoom() != null) {
-            roomStatistic = getRoomStatisticById(answerTime.getRoom().getId());
-        } else {
-            roomStatistic = getRoomStatisticByLessonId(answerTime.getLessonId());
-        }
-        return roomStatistic.getChartStatistic(answerTime.getUserId(), questionId);
+//        AnswerTime answerTime = answerTimeService.getAnswerTimeById(answerTimeId);
+//        RoomStatistic roomStatistic = null;
+//        if (answerTime.getRoom() != null) {
+//            roomStatistic = getRoomStatisticById(answerTime.getRoom().getId());
+//        } else {
+//            roomStatistic = getRoomStatisticByLessonId(answerTime.getLessonId());
+//        }
+//        return roomStatistic.getChartStatistic(answerTime.getUserId(), questionId);
+        ChartStatistic chartStatistic = new ChartStatistic();
+        List<UserRankStatistic> userRankStatistics = new ArrayList<>();
+        UserRankStatistic userRankStatistic = new UserRankStatistic();
+        userRankStatistic.setRank(1);
+        userRankStatistic.setAvatar("");
+        userRankStatistic.setUsername("Đức đẹp zai");
+        userRankStatistic.setId("1");
+        userRankStatistics.add(userRankStatistic);
+        userRankStatistic.setRank(2);
+        userRankStatistic.setAvatar("");
+        userRankStatistic.setUsername("Hoa Tuyết");
+        userRankStatistic.setId("2");
+        userRankStatistics.add(userRankStatistic);
+        userRankStatistic.setRank(3);
+        userRankStatistic.setAvatar("");
+        userRankStatistic.setUsername("Ly chân dài");
+        userRankStatistic.setId("3");
+        userRankStatistics.add(userRankStatistic);
+        chartStatistic.setUserRankStatistics(userRankStatistics);
+        chartStatistic.setCurrentRank(1);
+        return chartStatistic;
     }
 }

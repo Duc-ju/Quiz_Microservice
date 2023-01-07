@@ -37,7 +37,7 @@ public class Lesson {
     @Getter(AccessLevel.NONE)
     private Integer numberOfQuestion;
 
-    private String type;
+    private String type = LessonType.LESSON;
 
     private Date createdAt;
     private Date updatedAt;

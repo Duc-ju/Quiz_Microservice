@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class AnswerTimeAddedEvent {
     private Long roomId;
     private Long answerTimeId;
+    private Long lessonId;
     private String lessonTitle;
-    private Long point;
-    private LocalDateTime completedTime;
+    private LocalDateTime createdTime;
 }
