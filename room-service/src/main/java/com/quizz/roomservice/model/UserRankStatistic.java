@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserRankStatistic extends UserInfo {
     private int rank;
+    private Long point;
 }

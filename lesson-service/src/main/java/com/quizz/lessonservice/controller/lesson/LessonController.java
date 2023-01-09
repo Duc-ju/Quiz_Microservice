@@ -1,17 +1,17 @@
 package com.quizz.lessonservice.controller.lesson;
 
 import com.quizz.lessonservice.common.ResponseObject;
+import com.quizz.lessonservice.dto.UserInfo;
 import com.quizz.lessonservice.model.lesson.Lesson;
 import com.quizz.lessonservice.model.question.Question;
 import com.quizz.lessonservice.service.lesson.LessonService;
 import com.quizz.lessonservice.service.question.QuestionService;
+import com.quizz.lessonservice.util.TokenUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Calendar;
 import java.util.List;
@@ -26,10 +26,6 @@ public class LessonController {
     private final LessonService lessonService;
     private final QuestionService questionService;
 
-    public static String getBearerTokenHeader() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader("Authorization");
-    }
-
     @GetMapping("")
     public ResponseEntity<ResponseObject> getLessons() {
         List<Lesson> lessons = lessonService.getLessonList();
@@ -38,7 +34,6 @@ public class LessonController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getLesson(@PathVariable Long id) {
-        log.info(getBearerTokenHeader());
         try {
             Lesson lesson = lessonService.getLessonById(id);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -53,7 +48,6 @@ public class LessonController {
 
     @GetMapping("/{id}/raw")
     public ResponseEntity<ResponseObject> getLessonRaw(@PathVariable Long id) {
-        log.info(getBearerTokenHeader());
         try {
             Lesson lesson = lessonService.getLessonRaw(id);
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -68,6 +62,8 @@ public class LessonController {
 
     @PostMapping("")
     public ResponseEntity<ResponseObject> addLesson(@RequestBody Lesson lesson) {
+        UserInfo userInfo = TokenUtility.getBearerTokenInfo();
+        if (userInfo != null) lesson.setOwnerId(userInfo.getId());
         lesson.setDisFlg(true);
         lesson.setCreatedAt(Calendar.getInstance().getTime());
         log.info(lesson);

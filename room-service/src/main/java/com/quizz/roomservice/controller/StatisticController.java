@@ -1,6 +1,7 @@
 package com.quizz.roomservice.controller;
 
 import com.quizz.roomservice.common.ResponseObject;
+import com.quizz.roomservice.model.RoomStatistic;
 import com.quizz.roomservice.service.StatisticService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -49,6 +50,18 @@ public class StatisticController {
         try {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ResponseObject("Return answer-time statistic", statisticService.getAnswerTimeStatistic(answerTimeId)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseObject(e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/answer-times/{answerTimeId}/chart")
+    public ResponseEntity<ResponseObject> getAnswerTimeChart(@PathVariable Long answerTimeId) {
+        try {
+            RoomStatistic roomStatistic = statisticService.getRoomStatisticByLessonId(answerTimeId);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject("Return answer-time chart", roomStatistic.getChartStatistic()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject(e.getMessage(), null));

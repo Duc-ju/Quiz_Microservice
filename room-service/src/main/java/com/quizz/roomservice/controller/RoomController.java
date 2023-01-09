@@ -2,7 +2,9 @@ package com.quizz.roomservice.controller;
 
 import com.quizz.roomservice.common.ResponseObject;
 import com.quizz.roomservice.model.Room;
+import com.quizz.roomservice.model.UserInfo;
 import com.quizz.roomservice.service.RoomService;
+import com.quizz.roomservice.util.TokenUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,8 @@ public class RoomController {
 
     @PostMapping("")
     public ResponseEntity<ResponseObject> addRoom(@RequestBody Room room) {
+        UserInfo adminInfo = TokenUtility.getBearerTokenInfo();
+        room.setUserId(adminInfo.getId());
         log.info("Create room {}", room);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseObject("Return saved room", roomService.createRoom(room)));

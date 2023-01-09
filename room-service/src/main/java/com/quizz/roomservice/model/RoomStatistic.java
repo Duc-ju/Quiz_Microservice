@@ -36,14 +36,16 @@ public class RoomStatistic extends Room {
             if (value < 0) return -1;
             return 0;
         });
-        for (int i = 0; i < answerTimeList.size(); i++) {
+        for (int i = 0; i < answerTimeList.size() && i < 5; i++) {
             AnswerTimeStatistic answerTimeStatistic = (AnswerTimeStatistic) answerTimeList.get(i);
             UserRankStatistic userRankStatistic = new UserRankStatistic();
             if (answerTimeStatistic.getUserInfo() != null) {
                 BeanUtils.copyProperties(answerTimeStatistic.getUserInfo(), userRankStatistic);
             } else {
-                userRankStatistic.setId(answerTimeStatistic.getUserId());
+                userRankStatistic.setUsername(answerTimeStatistic.getNickName());
+                userRankStatistic.setId(answerTimeStatistic.getId().toString());
             }
+            userRankStatistic.setPoint(answerTimeStatistic.getPoint());
             userRankStatistic.setRank(i + 1);
             userRankStatisticList.add(userRankStatistic);
         }

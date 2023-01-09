@@ -82,7 +82,7 @@ public class AnswerTime {
     }
 
     public Long getPoint() {
-        if (questionAnswers == null) return (long) -1;
+        if (questionAnswers == null) return (long) 0;
         long point = 0;
         for (QuestionAnswer questionAnswer : questionAnswers) {
             point += questionAnswer.getPoint();
