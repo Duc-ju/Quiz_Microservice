@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/room/answer-times")
@@ -43,6 +45,7 @@ public class AnswerTimeController {
         UserInfo userInfo = TokenUtility.getBearerTokenInfo();
         answerTime.setUserId(userInfo.getId());
         answerTime.setNickName(userInfo.getUsername());
+        answerTime.setPlayedDateTime(LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseObject("return answer time", answerTimeService.addAnswerTime(answerTime)));
     }

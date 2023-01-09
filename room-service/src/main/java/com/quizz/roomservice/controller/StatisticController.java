@@ -56,10 +56,10 @@ public class StatisticController {
         }
     }
 
-    @GetMapping("/answer-times/{answerTimeId}/chart")
-    public ResponseEntity<ResponseObject> getAnswerTimeChart(@PathVariable Long answerTimeId) {
+    @GetMapping("/answer-times/{lessonId}/chart")
+    public ResponseEntity<ResponseObject> getAnswerTimeChart(@PathVariable Long lessonId) {
         try {
-            RoomStatistic roomStatistic = statisticService.getRoomStatisticByLessonId(answerTimeId);
+            RoomStatistic roomStatistic = statisticService.getRoomStatisticByLessonId(lessonId);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ResponseObject("Return answer-time chart", roomStatistic.getChartStatistic()));
         } catch (Exception e) {
@@ -73,6 +73,18 @@ public class StatisticController {
         try {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ResponseObject("Return room statistic", statisticService.getRoomStatisticById(roomId)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+    }
+
+    @GetMapping("/rooms/{roomId}/chart")
+    public ResponseEntity<ResponseObject> getRoomChart(@PathVariable Long roomId) {
+        try {
+            RoomStatistic roomStatistic = statisticService.getRoomStatisticById(roomId);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject("Return room statistic", roomStatistic.getChartStatistic()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

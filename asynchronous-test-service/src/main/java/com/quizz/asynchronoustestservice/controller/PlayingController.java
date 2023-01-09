@@ -34,6 +34,8 @@ public class PlayingController {
         int questionSize = questions.size();
         simpMessagingTemplate.convertAndSend("/topic/room-message/" + roomId,
                 new ResponseMessage().builder().type(MessageType.SEND_START_ROOM).status(MessageStatus.SUCCESS).message(Constant.PENDING_START_TIME).build());
+        simpMessagingTemplate.convertAndSend("/topic/room-admin/" + roomId,
+                new ResponseMessage().builder().type(MessageType.SEND_START_ROOM).status(MessageStatus.SUCCESS).message(Constant.PENDING_START_TIME).build());
         Thread.sleep(Constant.PENDING_START_TIME);
         for (int i = 0; i < questionSize; i++) {
             question = questions.get(i);
@@ -52,8 +54,6 @@ public class PlayingController {
                     .status(MessageStatus.SUCCESS)
                     .build();
             simpMessagingTemplate.convertAndSend("/topic/room-admin/" + roomId,
-                    responseMessage);
-            simpMessagingTemplate.convertAndSend("/topic/room-message/" + roomId,
                     responseMessage);
             Thread.sleep(Constant.PENDING_QUESTION_TIME);
         }
