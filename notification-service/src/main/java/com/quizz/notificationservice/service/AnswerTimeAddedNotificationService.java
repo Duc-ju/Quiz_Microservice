@@ -28,13 +28,14 @@ public class AnswerTimeAddedNotificationService {
         AnswerTimeAddedNotification answerTimeAddedNotification = new AnswerTimeAddedNotification();
         answerTimeAddedNotification.setCreatedTime(answerTimeAddedEvent.getCreatedTime());
         if (answerTimeAddedEvent.getRoomId() == null) {
+            answerTimeAddedNotification.setMessage("Bạn vừa làm một bài luyện tập, click để xem kết quả.");
             answerTimeAddedNotification.setRedirectUrl("/join/practice/"
                     + answerTimeAddedEvent.getLessonId() + "/scored-game/" + answerTimeAddedEvent.getAnswerTimeId());
         } else {
+            answerTimeAddedNotification.setMessage("Bạn vừa làm một bài kiểm tra, click để xem kết quả.");
             answerTimeAddedNotification.setRedirectUrl("/join/asynchronous/"
                     + answerTimeAddedEvent.getRoomId() + "/scored-game/" + answerTimeAddedEvent.getAnswerTimeId());
         }
-        answerTimeAddedNotification.setMessage("Bạn vừa làm một bài kiểm tra, click để xem chi tiết.");
         answerTimeAddedNotification.setUserId(answerTimeAddedEvent.getUserId());
         AnswerTimeAddedNotification savedNotification = answerTimeAddedNotificationRepository.save(answerTimeAddedNotification);
         log.info(savedNotification);

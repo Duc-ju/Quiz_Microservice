@@ -39,8 +39,8 @@ public class StatisticService {
         return getAnswerTimeCommonStatistic(answerTime, lessonMap);
     }
 
-    public AnswerTimeStatistic getAnswerTimeStatistic(Long answerTimeId, LinkedHashMap lessonMap) throws Exception {
-        AnswerTime answerTime = answerTimeService.getAnswerTimeById(answerTimeId);
+    public AnswerTimeStatistic getAnswerTimeStatistic(AnswerTime answerTime) throws Exception {
+        LinkedHashMap lessonMap = getLessonById(answerTime.getLessonId());
         return getAnswerTimeCommonStatistic(answerTime, lessonMap);
     }
 
@@ -125,36 +125,13 @@ public class StatisticService {
         return roomStatistic;
     }
 
-    public ChartStatistic getAfterQuestionChart(Long answerTimeId, Long questionId) throws Exception {
-//        AnswerTime answerTime = answerTimeService.getAnswerTimeById(answerTimeId);
-//        RoomStatistic roomStatistic = null;
-//        if (answerTime.getRoom() != null) {
-//            roomStatistic = getRoomStatisticById(answerTime.getRoom().getId());
-//        } else {
-//            roomStatistic = getRoomStatisticByLessonId(answerTime.getLessonId());
-//        }
-//        return roomStatistic.getChartStatistic(answerTime.getUserId(), questionId);
-        ChartStatistic chartStatistic = new ChartStatistic();
-        List<UserRankStatistic> userRankStatistics = new ArrayList<>();
-        UserRankStatistic userRankStatistic = new UserRankStatistic();
-        userRankStatistic.setRank(1);
-        userRankStatistic.setAvatar("");
-        userRankStatistic.setUsername("Đức đẹp zai");
-        userRankStatistic.setId("1");
-        userRankStatistics.add(userRankStatistic);
-        userRankStatistic.setRank(2);
-        userRankStatistic.setAvatar("");
-        userRankStatistic.setUsername("Hoa Tuyết");
-        userRankStatistic.setId("2");
-        userRankStatistics.add(userRankStatistic);
-        userRankStatistic.setRank(3);
-        userRankStatistic.setAvatar("");
-        userRankStatistic.setUsername("Ly chân dài");
-        userRankStatistic.setId("3");
-        userRankStatistics.add(userRankStatistic);
-        chartStatistic.setUserRankStatistics(userRankStatistics);
-        chartStatistic.setCurrentRank(1);
-        return chartStatistic;
+    public List<AnswerTimeStatistic> getAllAnswerTimeStatisticByUserId(String userId) throws Exception {
+        List<AnswerTime> answerTimes = answerTimeService.getAllAnswerTimeByUserId(userId);
+        List<AnswerTimeStatistic> answerTimeStatistics = new ArrayList<>();
+        for (AnswerTime answerTime : answerTimes) {
+            answerTimeStatistics.add(getAnswerTimeStatistic(answerTime));
+        }
+        return answerTimeStatistics;
     }
 
     public List<RoomStatistic> getReportList(String userId) throws Exception {

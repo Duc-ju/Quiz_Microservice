@@ -1,6 +1,7 @@
 package com.quizz.roomservice.controller;
 
 import com.quizz.roomservice.common.ResponseObject;
+import com.quizz.roomservice.model.AnswerTimeStatistic;
 import com.quizz.roomservice.model.RoomStatistic;
 import com.quizz.roomservice.service.StatisticService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,20 +34,6 @@ public class StatisticController {
         }
     }
 
-    @GetMapping("/answer-times/{answerTimeId}/questions/{questionId}/chart")
-    public ResponseEntity<ResponseObject> getAfterQuestionRank(
-            @PathVariable Long answerTimeId,
-            @PathVariable Long questionId
-    ) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject("Return question chart", statisticService.getAfterQuestionChart(answerTimeId, questionId)));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseObject(e.getMessage(), null));
-        }
-    }
-
     @GetMapping("/answer-times/{answerTimeId}")
     public ResponseEntity<ResponseObject> getAnswerTimeStatistic(@PathVariable Long answerTimeId) {
         try {
@@ -54,6 +43,19 @@ public class StatisticController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject(e.getMessage(), null));
         }
+    }
+
+    @GetMapping(path = "users/{userId}/answer-times")
+    public ResponseEntity<ResponseObject> getListAnswerTimeByUserId(@PathVariable String userId) {
+        try {
+            List<AnswerTimeStatistic> answerTimeList = statisticService.getAllAnswerTimeStatisticByUserId(userId);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject("return list of answer time of user", answerTimeList));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseObject(e.getMessage(), null));
+        }
+
     }
 
     @GetMapping("/answer-times/{lessonId}/chart")

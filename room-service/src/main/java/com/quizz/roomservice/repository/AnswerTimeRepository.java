@@ -10,4 +10,6 @@ public interface AnswerTimeRepository extends JpaRepository<AnswerTime, Long> {
     List<AnswerTime> findByRoomId(Long id);
 
     List<AnswerTime> getByLessonId(Long id);
+
+    List<AnswerTime> findAllByUserId(String userId);
 }

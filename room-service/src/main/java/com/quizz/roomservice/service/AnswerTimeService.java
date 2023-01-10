@@ -63,4 +63,8 @@ public class AnswerTimeService {
         kafkaTemplate.send("notificationTopic", answerTimeAddedEvent);
         return answerTimeRepository.findById(savedAnswerTime.getId()).get();
     }
+
+    public List<AnswerTime> getAllAnswerTimeByUserId(String userId) {
+        return answerTimeRepository.findAllByUserId(userId);
+    }
 }
