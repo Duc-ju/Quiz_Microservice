@@ -57,7 +57,9 @@ public class AnswerTimeService {
         AnswerTimeAddedEvent answerTimeAddedEvent = new AnswerTimeAddedEvent();
         answerTimeAddedEvent.setCreatedTime(LocalDateTime.now());
         answerTimeAddedEvent.setLessonId(answerTime.getLessonId());
-        answerTimeAddedEvent.setRoomId(savedAnswerTime.getRoom() == null ? null : savedAnswerTime.getRoom().getId());
+        if (answerTime.getRoom() != null && answerTime.getRoom().getId() != null) {
+            answerTimeAddedEvent.setRoomId(answerTime.getRoom().getId());
+        }
         answerTimeAddedEvent.setAnswerTimeId(savedAnswerTime.getId());
         answerTimeAddedEvent.setUserId(savedAnswerTime.getUserId());
         kafkaTemplate.send("notificationTopic", answerTimeAddedEvent);
