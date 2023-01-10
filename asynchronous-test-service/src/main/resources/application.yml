@@ -1,6 +1,6 @@
 spring:
   application:
-    name: synchronous-test-service
+    name: asynchronous-test-service
 
 server:
   port: 8087

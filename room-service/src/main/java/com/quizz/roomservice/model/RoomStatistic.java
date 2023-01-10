@@ -32,8 +32,8 @@ public class RoomStatistic extends Room {
         }
         answerTimeList.sort((o1, o2) -> {
             long value = o1.getPoint() - o2.getPoint();
-            if (value > 0) return 1;
-            if (value < 0) return -1;
+            if (value > 0) return -1;
+            if (value < 0) return 1;
             return 0;
         });
         for (int i = 0; i < answerTimeList.size() && i < 5; i++) {

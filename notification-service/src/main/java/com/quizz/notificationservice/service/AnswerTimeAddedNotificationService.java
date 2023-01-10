@@ -1,5 +1,7 @@
 package com.quizz.notificationservice.service;
 
+import com.quizz.notificationservice.dto.ResponseMessage;
+import com.quizz.notificationservice.dto.ResponseType;
 import com.quizz.notificationservice.event.AnswerTimeAddedEvent;
 import com.quizz.notificationservice.model.AnswerTimeAddedNotification;
 import com.quizz.notificationservice.repository.AnswerTimeAddedNotificationRepository;
@@ -25,12 +27,20 @@ public class AnswerTimeAddedNotificationService {
     public void saveNotification(AnswerTimeAddedEvent answerTimeAddedEvent) {
         AnswerTimeAddedNotification answerTimeAddedNotification = new AnswerTimeAddedNotification();
         answerTimeAddedNotification.setCreatedTime(answerTimeAddedEvent.getCreatedTime());
-        answerTimeAddedNotification.setRedirectUrl("/join/practice/"
-                + answerTimeAddedEvent.getLessonId() + "/scored-game/" + answerTimeAddedEvent.getLessonId());
+        if (answerTimeAddedEvent.getRoomId() == null) {
+            answerTimeAddedNotification.setRedirectUrl("/join/practice/"
+                    + answerTimeAddedEvent.getLessonId() + "/scored-game/" + answerTimeAddedEvent.getAnswerTimeId());
+        } else {
+            answerTimeAddedNotification.setRedirectUrl("/join/asynchronous/"
+                    + answerTimeAddedEvent.getRoomId() + "/scored-game/" + answerTimeAddedEvent.getAnswerTimeId());
+        }
         answerTimeAddedNotification.setMessage("Bạn vừa làm một bài kiểm tra, click để xem chi tiết.");
+        answerTimeAddedNotification.setUserId(answerTimeAddedEvent.getUserId());
         AnswerTimeAddedNotification savedNotification = answerTimeAddedNotificationRepository.save(answerTimeAddedNotification);
         log.info(savedNotification);
-        simpMessagingTemplate.convertAndSend("/topic/notification/" + savedNotification.getUserId(), savedNotification);
+        simpMessagingTemplate.convertAndSend("/topic/notification/"
+                + savedNotification.getUserId(), ResponseMessage.builder()
+                .type(ResponseType.ADDED_MESSAGE).body(savedNotification).build());
     }
 
 }

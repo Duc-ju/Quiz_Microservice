@@ -52,4 +52,17 @@ public class RoomController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    @GetMapping("/{roomId}/check-started")
+    public ResponseEntity<ResponseObject> checkStarted(@PathVariable Long roomId) {
+        try {
+            boolean isStarted = roomService.checkStarted(roomId);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject(
+                            "Return status of room, if true - room is started with roomId:" + roomId, isStarted));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }

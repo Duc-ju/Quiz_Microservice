@@ -35,3 +35,7 @@ logging:
       type:
         description:
           sql: trace
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka

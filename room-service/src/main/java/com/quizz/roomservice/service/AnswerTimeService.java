@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,8 +55,11 @@ public class AnswerTimeService {
             questionAnswerPartRepository.saveAll(questionAnswer.getQuestionAnswerParts());
         }
         AnswerTimeAddedEvent answerTimeAddedEvent = new AnswerTimeAddedEvent();
+        answerTimeAddedEvent.setCreatedTime(LocalDateTime.now());
+        answerTimeAddedEvent.setLessonId(answerTime.getLessonId());
         answerTimeAddedEvent.setRoomId(savedAnswerTime.getRoom() == null ? null : savedAnswerTime.getRoom().getId());
         answerTimeAddedEvent.setAnswerTimeId(savedAnswerTime.getId());
+        answerTimeAddedEvent.setUserId(savedAnswerTime.getUserId());
         kafkaTemplate.send("notificationTopic", answerTimeAddedEvent);
         return answerTimeRepository.findById(savedAnswerTime.getId()).get();
     }

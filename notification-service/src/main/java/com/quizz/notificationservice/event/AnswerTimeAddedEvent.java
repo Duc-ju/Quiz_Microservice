@@ -15,4 +15,5 @@ public class AnswerTimeAddedEvent {
     private Long lessonId;
     private String lessonTitle;
     private LocalDateTime createdTime;
+    private String userId;
 }

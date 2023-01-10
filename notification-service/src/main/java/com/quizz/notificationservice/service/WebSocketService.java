@@ -10,6 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -19,15 +20,15 @@ public class WebSocketService {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    private AnswerTimeAddedNotificationService answerTimeAddedNotificationService;
+    private final AnswerTimeAddedNotificationService answerTimeAddedNotificationService;
 
     public void handleSubscribeRoom(SessionSubscribeEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         String userId = headers.getDestination().split("/")[3];
         List<AnswerTimeAddedNotification> answerTimeAddedNotifications = answerTimeAddedNotificationService.getAllByUserId(userId);
+        Collections.reverse(answerTimeAddedNotifications);
         ResponseMessage responseMessage = ResponseMessage.builder().type(ResponseType.LIST_INIT).body(answerTimeAddedNotifications).build();
         log.info(responseMessage);
-        simpMessagingTemplate.convertAndSend(headers.getDestination(),
-                new ResponseMessage().builder().type(ResponseType.LIST_INIT).body(answerTimeAddedNotifications));
+        simpMessagingTemplate.convertAndSend(headers.getDestination(), responseMessage);
     }
 }
